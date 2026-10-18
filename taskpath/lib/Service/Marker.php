@@ -42,9 +42,13 @@ class Marker {
 
 	public function clear(string $fileId): void {
 		try {
-			$ids = array_filter(array_map(fn ($status) => $this->tagId($status, create: false), array_keys(self::STATUSES)));
-			if ($ids) {
-				$this->mapper->unassignTags($fileId, 'files', array_values($ids));
+			$ours = array_filter(array_map(fn ($status) => $this->tagId($status, create: false), array_keys(self::STATUSES)));
+			// Only touch tags the file actually has: every unassign shows up in the
+			// activity stream, even for a tag that wasn't there.
+			$has = $this->mapper->getTagIdsForObjects([$fileId], 'files')[$fileId] ?? [];
+			$remove = array_values(array_intersect(array_map('strval', $ours), array_map('strval', $has)));
+			if ($remove) {
+				$this->mapper->unassignTags($fileId, 'files', $remove);
 			}
 		} catch (\Exception $e) {
 			$this->logger->info('Taskpath: could not untag a document: ' . $e->getMessage(), ['app' => Application::APP_ID]);

@@ -57,7 +57,7 @@ class Filer {
 		$moved = $file->move($target->getPath() . '/' . $name);
 		$this->marker->clear((string)$moved->getId());
 		$path = $home->getRelativePath($moved->getPath());
-		$this->publish('filed', $moved->getId(), $moved->getName(), $path,
+		$this->publish(!empty($action['by_itself']) ? 'filed_itself' : 'filed', $moved->getId(), $moved->getName(), $path,
 			$home->getRelativePath($moved->getParent()->getPath()), $person);
 		return $path;
 	}

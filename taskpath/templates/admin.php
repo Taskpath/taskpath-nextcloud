@@ -39,6 +39,24 @@
 				<dt><?php p($l->t('Workspace')); ?></dt>
 				<dd><a href="<?php p($_['workspace_url']); ?>" target="_blank" rel="noopener"><?php p($_['workspace']); ?></a></dd>
 			</dl>
+			<?php if (!empty($_['autonomy']['kinds'])): ?>
+				<h3><?php p($l->t('Filed by itself')); ?></h3>
+				<p class="taskpath-hint"><?php p($l->t('After %1$s approvals in a row that nobody changed, Taskpath offers to file that kind of document by itself. It still checks every document and asks you when anything is unusual. One undo turns it off again.', [$_['autonomy']['needed']])); ?></p>
+				<table class="taskpath-kinds">
+					<?php foreach ($_['autonomy']['kinds'] as $kind): ?>
+						<tr>
+							<td><?php p($kind['label']); ?></td>
+							<?php if ($kind['granted']): ?>
+								<td class="taskpath-ok"><?php p($l->t('Files by itself (turned on by %1$s)', [$kind['granted']['by']])); ?></td>
+								<td><button class="taskpath-revoke" data-type="<?php p($kind['type']); ?>"><?php p($l->t('Turn off')); ?></button></td>
+							<?php else: ?>
+								<td class="taskpath-hint"><?php p($l->t('%1$s of %2$s in a row', [min($kind['streak'], $_['autonomy']['needed']), $_['autonomy']['needed']])); ?></td>
+								<td><?php if ($kind['offer']): ?><button class="taskpath-grant primary" data-type="<?php p($kind['type']); ?>"><?php p($l->t('File by itself')); ?></button><?php endif; ?></td>
+							<?php endif; ?>
+						</tr>
+					<?php endforeach; ?>
+				</table>
+			<?php endif; ?>
 			<button id="taskpath-pick" class="taskpath-secondary"><?php p($l->t('Choose another archive folder')); ?></button>
 			<p id="taskpath-setup-status" class="taskpath-hint" aria-live="polite"></p>
 		</div>

@@ -68,7 +68,21 @@
   "What leaves your Nextcloud: documents dropped in the intake folder (read, then deleted) and the names under the archive folder. Nothing else. Processed in the EU.": "Wat je Nextcloud verlaat: documenten die je in de map Te archiveren zet (gelezen, daarna verwijderd) en de namen in de archiefmap. Verder niets. Verwerkt in de EU.",
   "Where do your documents belong?": "Waar horen je documenten?",
   "Where it says so": "Waar het staat",
-  "Workspace": "Werkruimte"
+  "Workspace": "Werkruimte",
+  "Filed by itself": "Zelf archiveren",
+  "After %1$s approvals in a row that nobody changed, Taskpath offers to file that kind of document by itself. It still checks every document and asks you when anything is unusual. One undo turns it off again.": "Na %1$s goedkeuringen op rij zonder wijzigingen biedt Taskpath aan om dat soort document zelf te archiveren. Het controleert nog steeds elk document en vraagt het je als er iets ongewoons is. Eén keer ongedaan maken zet het weer uit.",
+  "Files by itself (turned on by %1$s)": "Archiveert zelf (aangezet door %1$s)",
+  "Turn off": "Uitzetten",
+  "%1$s of %2$s in a row": "%1$s van %2$s op rij",
+  "File by itself": "Zelf archiveren",
+  "Yes, file by itself": "Ja, zelf archiveren",
+  "Not now": "Nu niet",
+  "Fine. Taskpath keeps asking.": "Prima. Taskpath blijft het vragen.",
+  "Filed by Taskpath by itself (earned)": "Door Taskpath zelf gearchiveerd (verdiend)",
+  "Documents of the kind \"{kind}\" were right {count} times in a row, without changes.": "Documenten van het soort \"{kind}\" waren {count} keer op rij goed, zonder wijzigingen.",
+  "Let Taskpath file this kind of document by itself from now on? It still checks each one and asks you when anything is unusual. You can undo each filing, and one undo turns this off.": "Mag Taskpath dit soort document voortaan zelf archiveren? Het controleert nog steeds elk document en vraagt het je als er iets ongewoons is. Je kunt elke keer ongedaan maken, en één keer ongedaan maken zet dit uit.",
+  "From now on, Taskpath files documents of the kind \"{kind}\" by itself.": "Taskpath archiveert documenten van het soort \"{kind}\" voortaan zelf.",
+  "Taskpath filed {file} in {folder} by itself (earned for this kind of document)": "Taskpath heeft {file} zelf gearchiveerd in {folder} (verdiend voor dit soort document)"
  },
  "pluralForm": "nplurals=2; plural=(n != 1);"
 }

@@ -26,6 +26,7 @@ class Provider implements IProvider {
 			'link' => $this->urls->linkToRouteAbsolute('files.View.showFile', ['fileid' => $p['file_id']])];
 		$subject = match ($event->getSubject()) {
 			'filed' => $l->t('Taskpath filed {file} in {folder}, approved by {person}'),
+			'filed_itself' => $l->t('Taskpath filed {file} in {folder} by itself (earned for this kind of document)'),
 			'undone' => $l->t('{person} undid the filing of {file}; it is back in the intake folder'),
 			default => throw new UnknownActivityException(),
 		};

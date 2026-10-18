@@ -131,7 +131,7 @@
 				} }, t('Undo: back to the intake folder'))
 				: null
 			this.render(
-				el('p', { class: 'taskpath-ok' }, t('Filed by Taskpath')),
+				el('p', { class: 'taskpath-ok' }, filing.filed_by_itself ? t('Filed by Taskpath by itself (earned)') : t('Filed by Taskpath')),
 				el('dl', { class: 'taskpath-facts' },
 					filing.filed_at ? [el('dt', {}, t('On')), el('dd', {}, date(filing.filed_at))] : null,
 					filing.approved_by ? [el('dt', {}, t('Approved by')), el('dd', {}, filing.approved_by)] : null,
@@ -139,6 +139,35 @@
 				undo,
 				message,
 			)
+		}
+
+		// "Invoices were right 10 times in a row. File them by itself from now on?"
+		offer(offer) {
+			if (!offer) return null
+			const box = el('div', { class: 'taskpath-offer' })
+			const done = (text) => {
+				box.replaceChildren(this.note(text, 'ok'))
+				removeFromList(this.fileInfo.id)
+			}
+			box.append(
+				el('p', {}, t('Documents of the kind "{kind}" were right {count} times in a row, without changes.', { kind: offer.label, count: offer.streak })),
+				el('p', {}, t('Let Taskpath file this kind of document by itself from now on? It still checks each one and asks you when anything is unusual. You can undo each filing, and one undo turns this off.')),
+				el('div', { class: 'taskpath-buttons' },
+					el('button', { class: 'primary', onclick: async (e) => {
+						e.target.disabled = true
+						try {
+							await call('POST', '/autonomy/' + encodeURIComponent(offer.type))
+							done(t('From now on, Taskpath files documents of the kind "{kind}" by itself.', { kind: offer.label }))
+						} catch (error) {
+							e.target.disabled = false
+							box.append(this.note(error.message, 'error'))
+						}
+					} }, t('Yes, file by itself')),
+					el('button', { onclick: async () => {
+						await call('POST', '/autonomy/' + encodeURIComponent(offer.type) + '/decline').catch(() => {})
+						done(t('Fine. Taskpath keeps asking.'))
+					} }, t('Not now'))))
+			return box
 		}
 
 		proposal(filing) {
@@ -156,8 +185,8 @@
 				try {
 					const result = await call('POST', path, body)
 					if (result.path) {
-						this.render(this.note(t('Filed as {path}', { path: result.path }), 'ok'))
-						removeFromList(this.fileInfo.id)
+						this.render(this.note(t('Filed as {path}', { path: result.path }), 'ok'), this.offer(result.filing?.offer))
+						if (!result.filing?.offer) removeFromList(this.fileInfo.id)
 					} else {
 						this.showIntake(result.filing)
 					}

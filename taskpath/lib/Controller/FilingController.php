@@ -79,6 +79,30 @@ class FilingController extends Controller {
 		});
 	}
 
+	/** "Yes, file this kind by itself" (after an offer). */
+	#[NoAdminRequired]
+	public function grant(string $type): DataResponse {
+		return $this->guarded(fn () => $this->client->grantAutonomy($type, $this->person()));
+	}
+
+	/** "Not now": asked again after another run of approvals. */
+	#[NoAdminRequired]
+	public function decline(string $type): DataResponse {
+		return $this->guarded(function () use ($type) {
+			$this->client->declineAutonomy($type);
+			return [];
+		});
+	}
+
+	/** Back to asking every time. */
+	#[NoAdminRequired]
+	public function revoke(string $type): DataResponse {
+		return $this->guarded(function () use ($type) {
+			$this->client->revokeAutonomy($type, $this->person());
+			return [];
+		});
+	}
+
 	#[NoAdminRequired]
 	public function skip(int $id): DataResponse {
 		return $this->guarded(function () use ($id) {

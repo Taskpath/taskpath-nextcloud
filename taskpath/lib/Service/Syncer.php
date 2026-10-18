@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace OCA\Taskpath\Service;
 
 use OCA\Taskpath\AppInfo\Application;
+use OCP\IUserManager;
+use OCP\IUserSession;
 use OCP\Notification\IManager;
 use Psr\Log\LoggerInterface;
 
@@ -19,6 +21,8 @@ class Syncer {
 		private Filer $filer,
 		private IManager $notifications,
 		private Marker $marker,
+		private IUserManager $users,
+		private IUserSession $session,
 		private LoggerInterface $logger,
 	) {
 	}
@@ -38,14 +42,19 @@ class Syncer {
 	private function notifyNewProposals(): void {
 		$notified = $this->connection->notified();
 		foreach ($this->client->recentFilings() as $filing) {
-			$open = in_array($filing['status'], ['proposed', 'needs_look'], true);
+			// Waiting for a person. One that earned autonomy is already approved and
+			// gets filed below without bothering anyone.
+			$open = in_array($filing['status'], ['proposed', 'needs_look'], true)
+				&& ($filing['action']['state'] ?? '') === 'awaiting_approval';
 			if ($open && !in_array($filing['id'], $notified, true)) {
 				$this->marker->mark((string)$filing['file_id'], $filing['status']);
 				$this->notify($filing);
 				$notified[] = $filing['id'];
 			} elseif (!$open && in_array($filing['id'], $notified, true)) {
+				// Handled (filed, skipped, or approved to be filed by itself): once.
 				$this->marker->clear((string)$filing['file_id']);
 				$this->dismiss($filing['id']);
+				$notified = array_values(array_diff($notified, [$filing['id']]));
 			}
 		}
 		$this->connection->markNotified($notified);
@@ -73,12 +82,22 @@ class Syncer {
 	}
 
 	private function fileApprovedElsewhere(): void {
-		foreach ($this->client->approvedActions() as $action) {
+		$actions = $this->client->approvedActions();
+		if ($actions === []) {
+			return;
+		}
+		// Background jobs run without a user; move files as the folder's owner,
+		// so Nextcloud attributes the move to them, not to "an external account".
+		$owner = $this->users->get((string)$this->connection->owner());
+		if ($owner !== null && $this->session->getUser() === null) {
+			$this->session->setVolatileActiveUser($owner);
+		}
+		foreach ($actions as $action) {
 			$claimed = $this->client->claim((int)$action['id']);
 			if ($claimed === null) {
 				continue;
 			}
-			$this->execute($claimed, (string)($claimed['approved_by'] ?? ''));
+			$this->execute($claimed, !empty($claimed['by_itself']) ? '' : (string)($claimed['approved_by'] ?? ''));
 		}
 	}
 

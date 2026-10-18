@@ -16,5 +16,8 @@ return [
 		['name' => 'filing#skip', 'url' => '/filing/{id}/skip', 'verb' => 'POST'],
 		['name' => 'filing#undo', 'url' => '/filing/{id}/undo', 'verb' => 'POST'],
 		['name' => 'filing#pick', 'url' => '/filing/pick', 'verb' => 'POST'],
+		['name' => 'filing#grant', 'url' => '/autonomy/{type}', 'verb' => 'POST'],
+		['name' => 'filing#decline', 'url' => '/autonomy/{type}/decline', 'verb' => 'POST'],
+		['name' => 'filing#revoke', 'url' => '/autonomy/{type}', 'verb' => 'DELETE'],
 	],
 ];

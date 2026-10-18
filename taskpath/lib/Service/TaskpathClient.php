@@ -71,6 +71,22 @@ class TaskpathClient {
 		return $this->request('POST', '/api/v1/filings/' . $id . '/undo', ['json' => ['user' => $user]]);
 	}
 
+	public function autonomy(): array {
+		return $this->request('GET', '/api/v1/autonomy');
+	}
+
+	public function grantAutonomy(string $type, array $user): array {
+		return $this->request('POST', '/api/v1/autonomy', ['json' => ['type' => $type, 'user' => $user]]);
+	}
+
+	public function declineAutonomy(string $type): void {
+		$this->request('POST', '/api/v1/autonomy/' . rawurlencode($type) . '/decline');
+	}
+
+	public function revokeAutonomy(string $type, array $user): void {
+		$this->request('DELETE', '/api/v1/autonomy/' . rawurlencode($type), ['json' => ['user' => $user]]);
+	}
+
 	public function skip(int $id, array $user): array {
 		return $this->request('POST', '/api/v1/filings/' . $id . '/skip', ['json' => ['user' => $user]]);
 	}

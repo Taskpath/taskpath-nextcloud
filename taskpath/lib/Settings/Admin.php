@@ -6,6 +6,7 @@ namespace OCA\Taskpath\Settings;
 
 use OCA\Taskpath\AppInfo\Application;
 use OCA\Taskpath\Service\Connection;
+use OCA\Taskpath\Service\TaskpathClient;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
 use OCP\IURLGenerator;
@@ -19,6 +20,7 @@ class Admin implements ISettings {
 		private IUserSession $session,
 		private IURLGenerator $urls,
 		private IRequest $request,
+		private TaskpathClient $client,
 	) {
 	}
 
@@ -38,7 +40,20 @@ class Admin implements ISettings {
 			'intake' => $this->connection->intakePath(),
 			'intake_url' => $this->connection->intakeId() ? $this->urls->linkToRoute('files.View.showFile', ['fileid' => $this->connection->intakeId()]) : '',
 			'status' => (string)$this->request->getParam('taskpath', ''),
+			'autonomy' => $this->autonomy(),
 		], '');
+	}
+
+	/** What has earned or been granted filing by itself; empty if Taskpath can't be reached. */
+	private function autonomy(): array {
+		if (!$this->connection->isReady()) {
+			return [];
+		}
+		try {
+			return $this->client->autonomy();
+		} catch (\Exception) {
+			return [];
+		}
 	}
 
 	public function getSection(): string {

@@ -48,6 +48,19 @@
 			await call('DELETE', '/connect')
 			window.location.reload()
 		})
+		document.querySelectorAll('.taskpath-grant, .taskpath-revoke').forEach((button) => {
+			button.addEventListener('click', async () => {
+				button.disabled = true
+				const grant = button.classList.contains('taskpath-grant')
+				try {
+					await call(grant ? 'POST' : 'DELETE', '/autonomy/' + encodeURIComponent(button.dataset.type))
+					window.location.reload()
+				} catch (error) {
+					button.disabled = false
+					window.OC.Notification.showTemporary(error.message)
+				}
+			})
+		})
 		// Just connected: go straight to the one remaining question.
 		const root = document.getElementById('taskpath-admin')
 		if (root?.dataset.status === 'connected' && root.dataset.ready === '0') pick()
