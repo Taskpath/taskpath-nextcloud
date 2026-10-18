@@ -1,0 +1,41 @@
+Administratie
+Administratie/Bonnen
+Administratie/Bonnen/2025
+Administratie/Bonnen/2026
+Administratie/Inkoop
+Administratie/Inkoop/2025
+Administratie/Inkoop/2025/Bouwmaat Hoeve
+Administratie/Inkoop/2025/Elektro Maas
+Administratie/Inkoop/2025/Gasservice Noord
+Administratie/Inkoop/2025/Groothandel Brink
+Administratie/Inkoop/2025/Koperhuis Zwolle
+Administratie/Inkoop/2025/Van Leeuwen Buizen
+Administratie/Inkoop/2026
+Administratie/Inkoop/2026/Bouwmaat Hoeve
+Administratie/Inkoop/2026/Elektro Maas
+Administratie/Inkoop/2026/Gasservice Noord
+Administratie/Inkoop/2026/Groothandel Brink
+Administratie/Inkoop/2026/Koperhuis Zwolle
+Administratie/Inkoop/2026/Van Leeuwen Buizen
+Bank
+Bank/2025
+Bank/2026
+Belastingdienst
+Belastingdienst/2025
+Belastingdienst/2026
+Contracten
+Contracten/Bakkerij Smit
+Contracten/Gasservice Noord
+Contracten/VvE Parkzicht
+Contracten/Woonstichting Delta
+Correspondentie
+Correspondentie/2025
+Correspondentie/2026
+Diversen
+Offertes
+Offertes/2025
+Offertes/2026
+Personeel
+Personeel/Loonstroken
+Personeel/Loonstroken/2025
+Personeel/Loonstroken/2026
