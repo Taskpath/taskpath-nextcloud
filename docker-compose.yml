@@ -1,0 +1,23 @@
+# Local development: a Nextcloud with this app mounted, talking to a Taskpath
+# dev server on the host (bin/rails server -b 0.0.0.0 -p 3000).
+#   docker compose up -d && ./dev/setup.sh
+services:
+  nextcloud:
+    image: nextcloud:31-apache
+    # Docker creates custom_apps (the mount's parent) as root; hand it back to
+    # the web server before the installer checks it's writable.
+    entrypoint: ["sh", "-c", "mkdir -p /var/www/html/custom_apps && chown www-data:www-data /var/www/html/custom_apps && exec /entrypoint.sh apache2-foreground"]
+    ports:
+      - "8080:80"
+    environment:
+      SQLITE_DATABASE: nextcloud
+      NEXTCLOUD_ADMIN_USER: admin
+      NEXTCLOUD_ADMIN_PASSWORD: admin
+      NEXTCLOUD_TRUSTED_DOMAINS: localhost
+    volumes:
+      - nextcloud:/var/www/html
+      - ./taskpath:/var/www/html/custom_apps/taskpath:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+volumes:
+  nextcloud:
