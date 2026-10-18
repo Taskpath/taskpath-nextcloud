@@ -6,6 +6,8 @@ namespace OCA\Taskpath\Controller;
 
 use OCA\Taskpath\AppInfo\Application;
 use OCA\Taskpath\Service\Connection;
+use OCA\Taskpath\Service\Filer;
+use OCA\Taskpath\Service\Uploader;
 use OCA\Taskpath\Service\Syncer;
 use OCA\Taskpath\Service\TaskpathClient;
 use OCA\Taskpath\Service\TaskpathException;
@@ -26,6 +28,8 @@ class FilingController extends Controller {
 		private Connection $connection,
 		private TaskpathClient $client,
 		private Syncer $syncer,
+		private Filer $filer,
+		private Uploader $uploader,
 		private IUserSession $session,
 	) {
 		parent::__construct(Application::APP_ID, $request);
@@ -34,6 +38,30 @@ class FilingController extends Controller {
 	#[NoAdminRequired]
 	public function show(string $fileId): DataResponse {
 		return $this->guarded(fn () => ['filing' => $this->client->filingForFile($fileId)]);
+	}
+
+	/**
+	 * Someone opened a document Taskpath hasn't seen yet (background jobs run on
+	 * cron, every few minutes): send it now instead of waiting.
+	 */
+	#[NoAdminRequired]
+	public function pick(int $fileId): DataResponse {
+		return $this->guarded(fn () => ['filing' => $this->uploader->upload($fileId)]);
+	}
+
+	/** Undo a filing: the document goes back to the intake folder, the proposal reopens. */
+	#[NoAdminRequired]
+	public function undo(int $id): DataResponse {
+		return $this->guarded(function () use ($id) {
+			$filing = $this->client->filing($id);
+			if (empty($filing['undoable'])) {
+				throw new \RuntimeException('This filing can no longer be undone');
+			}
+			$person = $this->person();
+			$this->filer->returnToIntake((int)$filing['file_id'], (string)$filing['name'], $person['name']);
+			$reopened = $this->client->undo($id, $person);
+			return ['filing' => $reopened];
+		});
 	}
 
 	/** Approve (with optional changes), then file it right away, here. */
@@ -45,7 +73,7 @@ class FilingController extends Controller {
 			if (($action['state'] ?? null) !== 'executing') {
 				return ['filing' => $filing];
 			}
-			$result = $this->syncer->execute($action);
+			$result = $this->syncer->execute($action, $this->person()['name']);
 			$this->syncer->dismiss($id);
 			return ['filing' => $this->client->filing($id), 'path' => $result['path']];
 		});

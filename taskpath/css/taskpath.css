@@ -2,19 +2,26 @@
 .taskpath-lead { margin-bottom: 16px; }
 .taskpath-step { margin: 16px 0; }
 .taskpath-hint { color: var(--color-text-maxcontrast); }
+.taskpath-small { font-size: 0.9em; }
 .taskpath-ok { color: var(--color-success-text, var(--color-success)); font-weight: bold; }
 .taskpath-error { color: var(--color-error-text, var(--color-error)); }
 .taskpath-secondary { margin-top: 12px; }
 .taskpath-disconnect { margin-top: 32px; }
 .taskpath-privacy { margin-top: 24px; font-size: 0.9em; }
-.taskpath-facts { display: grid; grid-template-columns: max-content 1fr; gap: 4px 12px; margin: 8px 0; }
-.taskpath-facts dt, .taskpath-field dt { color: var(--color-text-maxcontrast); }
-.taskpath-field { display: contents; }
+.taskpath-facts { display: grid; grid-template-columns: max-content 1fr; gap: 6px 12px; margin: 4px 0 8px; }
+.taskpath-facts dt { color: var(--color-text-maxcontrast); }
+.taskpath-facts dd { min-width: 0; overflow-wrap: anywhere; }
 .taskpath-evidence { display: block; font-size: 0.85em; color: var(--color-text-maxcontrast); font-style: italic; }
-.taskpath-tab { padding: 8px 4px; }
-.taskpath-tab h3 { margin: 16px 0 6px; font-weight: bold; }
-.taskpath-tab label { display: block; margin: 8px 0; color: var(--color-text-maxcontrast); }
-.taskpath-tab input[type="text"] { display: block; width: 100%; margin-top: 2px; }
+
+/* Files sidebar tab */
+.taskpath-tab { padding: 4px 2px; }
+.taskpath-tab section { margin-bottom: 18px; }
+.taskpath-tab h4 { margin: 0 0 6px; font-size: 0.85em; font-weight: bold; text-transform: uppercase; letter-spacing: 0.03em; color: var(--color-text-maxcontrast); }
+.taskpath-tab label { display: block; margin: 8px 0 2px; font-size: 0.9em; color: var(--color-text-maxcontrast); }
+.taskpath-tab input[type="text"] { display: block; width: 100%; margin: 0; }
 .taskpath-buttons { display: flex; gap: 8px; margin-top: 12px; }
-.taskpath-look { background: var(--color-warning-hover, #fff3cd); border-radius: var(--border-radius-large, 8px); padding: 8px 12px; margin-bottom: 8px; }
-.taskpath-look ul { list-style: disc; margin-left: 18px; }
+.taskpath-look { background: var(--color-warning-hover, #fff3cd); border-radius: var(--border-radius-large, 8px); padding: 8px 12px; margin-bottom: 14px; }
+.taskpath-look ul { list-style: disc; margin: 4px 0 0 18px; }
+.taskpath-busy::before { content: ""; display: inline-block; width: 12px; height: 12px; margin-right: 8px; vertical-align: -1px;
+	border: 2px solid var(--color-border-dark); border-top-color: var(--color-primary-element); border-radius: 50%; animation: taskpath-spin 0.8s linear infinite; }
+@keyframes taskpath-spin { to { transform: rotate(360deg); } }

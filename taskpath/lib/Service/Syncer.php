@@ -18,6 +18,7 @@ class Syncer {
 		private TaskpathClient $client,
 		private Filer $filer,
 		private IManager $notifications,
+		private Marker $marker,
 		private LoggerInterface $logger,
 	) {
 	}
@@ -39,9 +40,11 @@ class Syncer {
 		foreach ($this->client->recentFilings() as $filing) {
 			$open = in_array($filing['status'], ['proposed', 'needs_look'], true);
 			if ($open && !in_array($filing['id'], $notified, true)) {
+				$this->marker->mark((string)$filing['file_id'], $filing['status']);
 				$this->notify($filing);
 				$notified[] = $filing['id'];
 			} elseif (!$open && in_array($filing['id'], $notified, true)) {
+				$this->marker->clear((string)$filing['file_id']);
 				$this->dismiss($filing['id']);
 			}
 		}
@@ -75,14 +78,14 @@ class Syncer {
 			if ($claimed === null) {
 				continue;
 			}
-			$this->execute($claimed);
+			$this->execute($claimed, (string)($claimed['approved_by'] ?? ''));
 		}
 	}
 
 	/** Moves the file for a claimed action and reports how it went. */
-	public function execute(array $action): array {
+	public function execute(array $action, string $person = ''): array {
 		try {
-			$path = $this->filer->file($action);
+			$path = $this->filer->file($action, $person);
 			return $this->client->reportResult((int)$action['id'], true, $path) + ['path' => $path];
 		} catch (TaskpathException $e) {
 			throw $e;

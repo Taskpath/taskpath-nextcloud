@@ -35,6 +35,7 @@ class LoadSidebarListener implements IEventListener {
 			'archive' => '/' . ltrim($this->connection->archivePath(), '/'),
 		]);
 		Util::addStyle(Application::APP_ID, 'taskpath');
+		Util::addTranslations(Application::APP_ID);
 		Util::addScript(Application::APP_ID, 'sidebar');
 	}
 }

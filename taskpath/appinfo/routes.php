@@ -14,5 +14,7 @@ return [
 		['name' => 'filing#show', 'url' => '/filing', 'verb' => 'GET'],
 		['name' => 'filing#approve', 'url' => '/filing/{id}/approve', 'verb' => 'POST'],
 		['name' => 'filing#skip', 'url' => '/filing/{id}/skip', 'verb' => 'POST'],
+		['name' => 'filing#undo', 'url' => '/filing/{id}/undo', 'verb' => 'POST'],
+		['name' => 'filing#pick', 'url' => '/filing/pick', 'verb' => 'POST'],
 	],
 ];

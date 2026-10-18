@@ -12,6 +12,7 @@ use OCP\EventDispatcher\IEventListener;
 use OCP\Files\Events\Node\NodeCreatedEvent;
 use OCP\Files\Events\Node\NodeRenamedEvent;
 use OCP\Files\File;
+use OCA\Taskpath\Service\Filer;
 
 /**
  * Queues a document for Taskpath when it lands in the intake folder (uploaded,
@@ -44,6 +45,10 @@ class FileArrivedListener implements IEventListener {
 				return;
 			}
 		} catch (\Exception) {
+			return;
+		}
+		// Moved back by Undo: Taskpath already reopened its proposal.
+		if (isset(Filer::$returning[$node->getId()])) {
 			return;
 		}
 		$this->jobs->add(UploadFile::class, ['file_id' => $node->getId()]);

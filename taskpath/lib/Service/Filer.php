@@ -8,6 +8,7 @@ use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
+use OCP\Activity\IManager as Activity;
 
 /**
  * Carries out an approved filing inside this Nextcloud, as the intake folder's
@@ -16,14 +17,24 @@ use OCP\Files\NotFoundException;
  * in the intake folder and the destination stays inside the archive.
  */
 class Filer {
+	/**
+	 * Files being moved back by Undo in this request. The move fires the arrival
+	 * listener in the same request, which then knows not to send it again.
+	 *
+	 * @var array<int, true>
+	 */
+	public static array $returning = [];
+
 	public function __construct(
 		private IRootFolder $root,
 		private Connection $connection,
+		private Marker $marker,
+		private Activity $activity,
 	) {
 	}
 
 	/** Moves the file and returns its new path relative to the owner's home. */
-	public function file(array $action): string {
+	public function file(array $action, string $person = ''): string {
 		$owner = $this->connection->owner() ?? throw new \RuntimeException('Not set up');
 		$home = $this->root->getUserFolder($owner);
 		$intake = $this->folderById($home, $this->connection->intakeId());
@@ -44,7 +55,46 @@ class Filer {
 
 		$name = $this->freeName($target, $this->cleanName((string)$action['name']));
 		$moved = $file->move($target->getPath() . '/' . $name);
-		return $home->getRelativePath($moved->getPath());
+		$this->marker->clear((string)$moved->getId());
+		$path = $home->getRelativePath($moved->getPath());
+		$this->publish('filed', $moved->getId(), $moved->getName(), $path,
+			$home->getRelativePath($moved->getParent()->getPath()), $person);
+		return $path;
+	}
+
+	/**
+	 * Undo: moves a filed document back into the intake folder under its original
+	 * name. Only for a file that is still under the archive folder.
+	 */
+	public function returnToIntake(int $fileId, string $originalName, string $person): string {
+		$owner = $this->connection->owner() ?? throw new \RuntimeException('Not set up');
+		$home = $this->root->getUserFolder($owner);
+		$intake = $this->folderById($home, $this->connection->intakeId());
+		$archive = $this->folderById($home, $this->connection->archiveId());
+		$file = $home->getById($fileId)[0] ?? null;
+		if (!$file instanceof File || !str_starts_with($file->getPath(), $archive->getPath() . '/')) {
+			throw new \RuntimeException('The document is no longer where Taskpath filed it');
+		}
+		self::$returning[$fileId] = true;
+		$moved = $file->move($intake->getPath() . '/' . $this->freeName($intake, $this->cleanName($originalName)));
+		$path = $home->getRelativePath($moved->getPath());
+		$this->publish('undone', $moved->getId(), $moved->getName(), $path, $home->getRelativePath($intake->getPath()), $person);
+		return $path;
+	}
+
+	private function publish(string $subject, int $fileId, string $name, string $path, string $folder, string $person): void {
+		try {
+			$event = $this->activity->generateEvent();
+			$event->setApp('taskpath')->setType('taskpath')
+				->setAffectedUser((string)$this->connection->owner())
+				->setTimestamp(time())
+				->setObject('files', $fileId, $path)
+				->setSubject($subject, ['file_id' => $fileId, 'name' => $name, 'path' => $path,
+					'folder' => ltrim($folder, '/'), 'person' => $person]);
+			$this->activity->publish($event);
+		} catch (\Exception) {
+			// The activity app may be disabled; filing doesn't depend on it.
+		}
 	}
 
 	private function folderById(Folder $home, ?int $id): Folder {

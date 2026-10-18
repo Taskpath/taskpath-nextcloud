@@ -24,6 +24,7 @@ class Admin implements ISettings {
 
 	public function getForm(): TemplateResponse {
 		Util::addStyle(Application::APP_ID, 'taskpath');
+		Util::addTranslations(Application::APP_ID);
 		Util::addScript(Application::APP_ID, 'admin');
 		$owner = $this->connection->owner();
 		return new TemplateResponse(Application::APP_ID, 'admin', [

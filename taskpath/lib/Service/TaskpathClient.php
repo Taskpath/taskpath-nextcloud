@@ -67,6 +67,10 @@ class TaskpathClient {
 		return $this->request('POST', '/api/v1/filings/' . $id . '/approve', ['json' => $body]);
 	}
 
+	public function undo(int $id, array $user): array {
+		return $this->request('POST', '/api/v1/filings/' . $id . '/undo', ['json' => ['user' => $user]]);
+	}
+
 	public function skip(int $id, array $user): array {
 		return $this->request('POST', '/api/v1/filings/' . $id . '/skip', ['json' => ['user' => $user]]);
 	}
