@@ -15,7 +15,7 @@
 		ai_unavailable: () => t('Taskpath couldn\'t read it just now: the AI service didn\'t answer. Try again later.'),
 		unsure_type: () => t('It isn\'t clear what kind of document this is.'),
 		missing_fields: () => t('Some details for the name weren\'t found.'),
-		party_unsure: () => t('The sender was matched to an existing folder by a similar name. Check it.'),
+		party_unsure: () => t('The name was matched to a similar name Taskpath already knows. Check it.'),
 		already_there: () => t('A document with this name is already in that folder. It may be a duplicate.'),
 	}
 	const FIELDS = { party: () => t('From'), date: () => t('Date'), period: () => t('Period'), reference: () => t('Reference') }

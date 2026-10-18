@@ -61,7 +61,6 @@
   "Taskpath didn't file this document.": "Taskpath heeft dit document niet gearchiveerd.",
   "Taskpath filed {file} in {folder}, approved by {person}": "Taskpath heeft {file} gearchiveerd in {folder}, goedgekeurd door {person}",
   "Taskpath then deletes everything it holds about this folder.": "Taskpath verwijdert dan alles wat het over deze map bewaart.",
-  "The sender was matched to an existing folder by a similar name. Check it.": "De afzender is gekoppeld aan een bestaande map met een vergelijkbare naam. Controleer dat even.",
   "There was no text to read in it.": "Er stond geen leesbare tekst in.",
   "To file": "Te archiveren",
   "Undo: back to the intake folder": "Ongedaan maken: terug naar Te archiveren",
@@ -82,7 +81,20 @@
   "Documents of the kind \"{kind}\" were right {count} times in a row, without changes.": "Documenten van het soort \"{kind}\" waren {count} keer op rij goed, zonder wijzigingen.",
   "Let Taskpath file this kind of document by itself from now on? It still checks each one and asks you when anything is unusual. You can undo each filing, and one undo turns this off.": "Mag Taskpath dit soort document voortaan zelf archiveren? Het controleert nog steeds elk document en vraagt het je als er iets ongewoons is. Je kunt elke keer ongedaan maken, en één keer ongedaan maken zet dit uit.",
   "From now on, Taskpath files documents of the kind \"{kind}\" by itself.": "Taskpath archiveert documenten van het soort \"{kind}\" voortaan zelf.",
-  "Taskpath filed {file} in {folder} by itself (earned for this kind of document)": "Taskpath heeft {file} zelf gearchiveerd in {folder} (verdiend voor dit soort document)"
+  "Taskpath filed {file} in {folder} by itself (earned for this kind of document)": "Taskpath heeft {file} zelf gearchiveerd in {folder} (verdiend voor dit soort document)",
+  "year": "jaar",
+  "month": "maand",
+  "year-month": "jaar-maand",
+  "date": "datum",
+  "number": "nummer",
+  "What Taskpath learned": "Wat Taskpath heeft geleerd",
+  "From the folder and file names in %1$s, Taskpath worked out where each kind of document goes and how it's named:": "Uit de namen van mappen en bestanden in %1$s heeft Taskpath afgeleid waar elk soort document hoort en hoe het heet:",
+  "There wasn't enough in %1$s yet to learn from, so Taskpath uses these defaults:": "Er stond nog te weinig in %1$s om van te leren, dus Taskpath gebruikt deze standaard:",
+  "Kind": "Soort",
+  "Folder": "Map",
+  "not in the archive yet, default": "nog niet in het archief, standaard",
+  "party": "relatie",
+  "The name was matched to a similar name Taskpath already knows. Check it.": "De naam is gekoppeld aan een vergelijkbare naam die Taskpath al kent. Controleer dat even."
  },
  "pluralForm": "nplurals=2; plural=(n != 1);"
 }

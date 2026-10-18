@@ -39,6 +39,26 @@
 				<dt><?php p($l->t('Workspace')); ?></dt>
 				<dd><a href="<?php p($_['workspace_url']); ?>" target="_blank" rel="noopener"><?php p($_['workspace']); ?></a></dd>
 			</dl>
+			<?php if (!empty($_['profile']['rules'])): ?>
+				<h3><?php p($l->t('What Taskpath learned')); ?></h3>
+				<p class="taskpath-hint">
+					<?php if ($_['profile']['source'] === 'learned'): ?>
+						<?php p($l->t('From the folder and file names in %1$s, Taskpath worked out where each kind of document goes and how it\'s named:', [$_['archive']])); ?>
+					<?php else: ?>
+						<?php p($l->t('There wasn\'t enough in %1$s yet to learn from, so Taskpath uses these defaults:', [$_['archive']])); ?>
+					<?php endif; ?>
+				</p>
+				<table class="taskpath-rules">
+					<tr><th><?php p($l->t('Kind')); ?></th><th><?php p($l->t('Folder')); ?></th><th><?php p($l->t('Name')); ?></th></tr>
+					<?php foreach ($_['profile']['rules'] as $rule): ?>
+						<tr class="<?php p($rule['default'] ? 'taskpath-default' : ''); ?>">
+							<td><?php p($rule['label']); ?><?php if ($rule['default'] && $_['profile']['source'] === 'learned'): ?> <span class="taskpath-hint">(<?php p($l->t('not in the archive yet, default')); ?>)</span><?php endif; ?></td>
+							<td><code><?php p($rule['folder']); ?></code></td>
+							<td><code><?php p($rule['name']); ?></code></td>
+						</tr>
+					<?php endforeach; ?>
+				</table>
+			<?php endif; ?>
 			<?php if (!empty($_['autonomy']['kinds'])): ?>
 				<h3><?php p($l->t('Filed by itself')); ?></h3>
 				<p class="taskpath-hint"><?php p($l->t('After %1$s approvals in a row that nobody changed, Taskpath offers to file that kind of document by itself. It still checks every document and asks you when anything is unusual. One undo turns it off again.', [$_['autonomy']['needed']])); ?></p>

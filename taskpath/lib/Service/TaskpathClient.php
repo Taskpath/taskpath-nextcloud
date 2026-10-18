@@ -71,6 +71,10 @@ class TaskpathClient {
 		return $this->request('POST', '/api/v1/filings/' . $id . '/undo', ['json' => ['user' => $user]]);
 	}
 
+	public function profile(): array {
+		return $this->request('GET', '/api/v1/filing_profile');
+	}
+
 	public function autonomy(): array {
 		return $this->request('GET', '/api/v1/autonomy');
 	}
