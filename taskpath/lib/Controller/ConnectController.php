@@ -55,7 +55,8 @@ class ConnectController extends Controller {
 	/** Taskpath sends the browser back here with a one-time code. */
 	#[NoCSRFRequired]
 	public function callback(string $code = '', string $state = ''): RedirectResponse {
-		$settings = $this->urls->linkToRoute('settings.AdminSettings.index', ['section' => 'taskpath']);
+		// Back to the Taskpath page, where the first run continues.
+		$settings = $this->urls->linkToRoute('taskpath.page.index');
 		$verifier = $this->connection->finishPairing($state);
 		if ($verifier === null || $code === '') {
 			return new RedirectResponse($settings . '?taskpath=failed');

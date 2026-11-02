@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 return [
 	'routes' => [
+		// The Taskpath page: first run and the inbox.
+		['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
+		['name' => 'inbox#state', 'url' => '/api/state', 'verb' => 'GET'],
+		['name' => 'inbox#suggestArchive', 'url' => '/api/archive-suggestion', 'verb' => 'GET'],
+		['name' => 'inbox#list', 'url' => '/api/inbox', 'verb' => 'GET'],
+		['name' => 'inbox#rules', 'url' => '/api/rules', 'verb' => 'GET'],
+		['name' => 'inbox#upload', 'url' => '/api/inbox/upload', 'verb' => 'POST'],
 		// Connecting to Taskpath (admin settings).
 		['name' => 'connect#start', 'url' => '/connect/start', 'verb' => 'POST'],
 		// Taskpath sends the browser back here; the path is fixed on Taskpath's side.

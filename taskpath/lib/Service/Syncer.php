@@ -81,7 +81,12 @@ class Syncer {
 		$this->notifications->markProcessed($notification);
 	}
 
-	private function fileApprovedElsewhere(): void {
+	/**
+	 * Files what was approved outside this page (earned autonomy, or in
+	 * Taskpath). The background job does this once a minute; the page calls it
+	 * on every refresh so automatic filing shows up within seconds.
+	 */
+	public function fileApprovedElsewhere(): void {
 		$actions = $this->client->approvedActions();
 		if ($actions === []) {
 			return;

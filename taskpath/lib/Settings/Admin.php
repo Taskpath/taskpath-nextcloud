@@ -6,9 +6,9 @@ namespace OCA\Taskpath\Settings;
 
 use OCA\Taskpath\AppInfo\Application;
 use OCA\Taskpath\Service\Connection;
+use OCA\Taskpath\Service\LearnedRules;
 use OCA\Taskpath\Service\TaskpathClient;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUserSession;
@@ -22,7 +22,7 @@ class Admin implements ISettings {
 		private IURLGenerator $urls,
 		private IRequest $request,
 		private TaskpathClient $client,
-		private IL10N $l,
+		private LearnedRules $rules,
 	) {
 	}
 
@@ -59,38 +59,8 @@ class Admin implements ISettings {
 		}
 	}
 
-	/**
-	 * The filing rules Taskpath learned, as people read them: placeholders in
-	 * words ({year}, {sender}), the organisation's own word for each kind.
-	 */
 	private function profile(): array {
-		if (!$this->connection->isReady()) {
-			return [];
-		}
-		try {
-			$profile = $this->client->profile();
-		} catch (\Exception) {
-			return [];
-		}
-		if (($profile['source'] ?? '') === 'learning') {
-			return ['source' => 'learning', 'rules' => []];
-		}
-		$words = [
-			'party' => $this->l->t('party'), 'year' => $this->l->t('year'), 'month' => $this->l->t('month'),
-			'yyyy-mm' => $this->l->t('year-month'), 'date' => $this->l->t('date'), 'reference' => $this->l->t('number'),
-		];
-		$readable = function (string $pattern, string $label) use ($words): string {
-			return preg_replace_callback('/\{([^}]+)\}/', fn ($m) => $m[1] === 'label' ? $label : '{' . ($words[$m[1]] ?? $m[1]) . '}', $pattern);
-		};
-		$rules = array_map(fn ($rule) => [
-			'label' => $rule['label'],
-			'folder' => $readable((string)$rule['folder'], (string)$rule['label']),
-			'name' => $readable((string)$rule['name'], (string)$rule['label']),
-			'default' => !empty($rule['default']) || ($profile['source'] ?? '') === 'default',
-			'derived' => !empty($rule['derived']),
-		], array_values(array_filter($profile['rules'] ?? [], fn ($rule) => ($rule['type'] ?? '') !== 'other')));
-		usort($rules, fn ($a, $b) => $a['default'] <=> $b['default']);
-		return ['source' => $profile['source'] ?? 'default', 'rules' => $rules];
+		return $this->connection->isReady() ? $this->rules->view() : [];
 	}
 
 	public function getSection(): string {
