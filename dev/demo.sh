@@ -2,7 +2,7 @@
 # A fresh demo Nextcloud: the app enabled and pointed at the Taskpath dev
 # server, and the fictional archive in admin's files under "Archief". Not
 # connected yet: connecting is part of the demo. Wipes the local Nextcloud.
-#   ./dev/demo.sh [--language nl]
+#   ./dev/demo.sh [--language nl]       (TASKPATH_PORT=3001 if Taskpath runs on another port)
 set -e
 cd "$(dirname "$0")/.."
 LANGUAGE=en
