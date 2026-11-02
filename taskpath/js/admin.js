@@ -61,6 +61,8 @@
 				}
 			})
 		})
+		// Still learning (a few seconds after setup): look again shortly.
+		if (document.getElementById('taskpath-learning')) setTimeout(() => window.location.reload(), 3000)
 		// Just connected: go straight to the one remaining question.
 		const root = document.getElementById('taskpath-admin')
 		if (root?.dataset.status === 'connected' && root.dataset.ready === '0') pick()

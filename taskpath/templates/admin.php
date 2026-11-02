@@ -39,7 +39,10 @@
 				<dt><?php p($l->t('Workspace')); ?></dt>
 				<dd><a href="<?php p($_['workspace_url']); ?>" target="_blank" rel="noopener"><?php p($_['workspace']); ?></a></dd>
 			</dl>
-			<?php if (!empty($_['profile']['rules'])): ?>
+			<?php if (($_['profile']['source'] ?? '') === 'learning'): ?>
+				<h3><?php p($l->t('What Taskpath learned')); ?></h3>
+				<p id="taskpath-learning" class="taskpath-hint taskpath-busy"><?php p($l->t('Learning from the names in %1$s how your archive is organised…', [$_['archive']])); ?></p>
+			<?php elseif (!empty($_['profile']['rules'])): ?>
 				<h3><?php p($l->t('What Taskpath learned')); ?></h3>
 				<p class="taskpath-hint">
 					<?php if ($_['profile']['source'] === 'learned'): ?>

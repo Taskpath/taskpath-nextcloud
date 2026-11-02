@@ -95,6 +95,7 @@ OC.L10N.register(
  "Folder": "Map",
  "not in the archive yet, default": "nog niet in het archief, standaard",
  "party": "relatie",
- "The name was matched to a similar name Taskpath already knows. Check it.": "De naam is gekoppeld aan een vergelijkbare naam die Taskpath al kent. Controleer dat even."
+ "The name was matched to a similar name Taskpath already knows. Check it.": "De naam is gekoppeld aan een vergelijkbare naam die Taskpath al kent. Controleer dat even.",
+ "Learning from the names in %1$s how your archive is organised…": "Taskpath leert uit de namen in %1$s hoe je archief is ingedeeld…"
 },
 "nplurals=2; plural=(n != 1);");

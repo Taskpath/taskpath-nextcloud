@@ -72,6 +72,9 @@ class Admin implements ISettings {
 		} catch (\Exception) {
 			return [];
 		}
+		if (($profile['source'] ?? '') === 'learning') {
+			return ['source' => 'learning', 'rules' => []];
+		}
 		$words = [
 			'party' => $this->l->t('party'), 'year' => $this->l->t('year'), 'month' => $this->l->t('month'),
 			'yyyy-mm' => $this->l->t('year-month'), 'date' => $this->l->t('date'), 'reference' => $this->l->t('number'),
