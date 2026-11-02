@@ -96,6 +96,7 @@ OC.L10N.register(
  "not in the archive yet, default": "nog niet in het archief, standaard",
  "party": "relatie",
  "The name was matched to a similar name Taskpath already knows. Check it.": "De naam is gekoppeld aan een vergelijkbare naam die Taskpath al kent. Controleer dat even.",
- "Learning from the names in %1$s how your archive is organised…": "Taskpath leert uit de namen in %1$s hoe je archief is ingedeeld…"
+ "Learning from the names in %1$s how your archive is organised…": "Taskpath leert uit de namen in %1$s hoe je archief is ingedeeld…",
+ "This name doesn't appear in the archive yet for this kind of document. Check that it's right.": "Deze naam komt voor dit soort document nog niet voor in het archief. Controleer of hij klopt."
 },
 "nplurals=2; plural=(n != 1);");

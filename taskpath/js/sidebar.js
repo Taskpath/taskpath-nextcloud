@@ -17,6 +17,7 @@
 		missing_fields: () => t('Some details for the name weren\'t found.'),
 		party_unsure: () => t('The name was matched to a similar name Taskpath already knows. Check it.'),
 		already_there: () => t('A document with this name is already in that folder. It may be a duplicate.'),
+		party_unknown: () => t('This name doesn\'t appear in the archive yet for this kind of document. Check that it\'s right.'),
 	}
 	const FIELDS = { party: () => t('From'), date: () => t('Date'), period: () => t('Period'), reference: () => t('Reference') }
 
