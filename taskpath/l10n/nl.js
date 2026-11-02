@@ -13,7 +13,6 @@ OC.L10N.register(
  "Arrived as": "Binnengekomen als",
  "As %1$s": "Als %1$s",
  "As %1$s (in a new folder)": "Als %1$s (in een nieuwe map)",
- "Back in {folder}, ready to file again.": "Weer in {folder}, klaar om opnieuw te archiveren.",
  "Choose another archive folder": "Andere archiefmap kiezen",
  "Choose folder": "Map kiezen",
  "Connect first": "Maak eerst verbinding",
@@ -97,6 +96,8 @@ OC.L10N.register(
  "party": "relatie",
  "The name was matched to a similar name Taskpath already knows. Check it.": "De naam is gekoppeld aan een vergelijkbare naam die Taskpath al kent. Controleer dat even.",
  "Learning from the names in %1$s how your archive is organised…": "Taskpath leert uit de namen in %1$s hoe je archief is ingedeeld…",
- "This name doesn't appear in the archive yet for this kind of document. Check that it's right.": "Deze naam komt voor dit soort document nog niet voor in het archief. Controleer of hij klopt."
+ "This name doesn't appear in the archive yet for this kind of document. Check that it's right.": "Deze naam komt voor dit soort document nog niet voor in het archief. Controleer of hij klopt.",
+ "filed with invoices": "bij de facturen",
+ "Back in {folder} as {name}, ready to file again.": "Terug in {folder} als {name}, klaar om opnieuw te archiveren."
 },
 "nplurals=2; plural=(n != 1);");

@@ -123,7 +123,7 @@
 					e.target.disabled = true
 					try {
 						await call('POST', '/filing/' + filing.id + '/undo')
-						this.render(this.note(t('Back in {folder}, ready to file again.', { folder: intake.path }), 'ok'))
+						this.render(this.note(t('Back in {folder} as {name}, ready to file again.', { folder: intake.path, name: filing.name }), 'ok'))
 						removeFromList(this.fileInfo.id)
 					} catch (error) {
 						e.target.disabled = false

@@ -87,6 +87,7 @@ class Admin implements ISettings {
 			'folder' => $readable((string)$rule['folder'], (string)$rule['label']),
 			'name' => $readable((string)$rule['name'], (string)$rule['label']),
 			'default' => !empty($rule['default']) || ($profile['source'] ?? '') === 'default',
+			'derived' => !empty($rule['derived']),
 		], array_values(array_filter($profile['rules'] ?? [], fn ($rule) => ($rule['type'] ?? '') !== 'other')));
 		usort($rules, fn ($a, $b) => $a['default'] <=> $b['default']);
 		return ['source' => $profile['source'] ?? 'default', 'rules' => $rules];

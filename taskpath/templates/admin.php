@@ -55,7 +55,7 @@
 					<tr><th><?php p($l->t('Kind')); ?></th><th><?php p($l->t('Folder')); ?></th><th><?php p($l->t('Name')); ?></th></tr>
 					<?php foreach ($_['profile']['rules'] as $rule): ?>
 						<tr class="<?php p($rule['default'] ? 'taskpath-default' : ''); ?>">
-							<td><?php p($rule['label']); ?><?php if ($rule['default'] && $_['profile']['source'] === 'learned'): ?> <span class="taskpath-hint">(<?php p($l->t('not in the archive yet, default')); ?>)</span><?php endif; ?></td>
+							<td><?php p($rule['label']); ?><?php if (!empty($rule['derived'])): ?> <span class="taskpath-hint">(<?php p($l->t('filed with invoices')); ?>)</span><?php endif; ?><?php if ($rule['default'] && $_['profile']['source'] === 'learned'): ?> <span class="taskpath-hint">(<?php p($l->t('not in the archive yet, default')); ?>)</span><?php endif; ?></td>
 							<td><code><?php p($rule['folder']); ?></code></td>
 							<td><code><?php p($rule['name']); ?></code></td>
 						</tr>
