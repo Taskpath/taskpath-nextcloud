@@ -30,7 +30,11 @@
 					{{ fact.label }} <b>{{ fact.value }}</b>
 				</li>
 			</ul>
-			<div v-if="awaiting" class="buttons">
+			<p v-if="awaiting && filing.can_decide === false" class="muted small">
+				{{ t('taskpath', 'Waiting for someone who has access to {folder}.', { folder: action.folder || archive }) }}
+				<a v-if="filing.task_url" class="trail" :href="filing.task_url" target="_blank" rel="noopener">{{ t('taskpath', 'View in Taskpath') }} ↗</a>
+			</p>
+			<div v-else-if="awaiting" class="buttons">
 				<NcButton variant="primary" @click="approve">{{ t('taskpath', 'Approve') }}</NcButton>
 				<NcButton v-if="!editing" @click="startEdit">{{ t('taskpath', 'Change') }}</NcButton>
 				<NcButton v-else variant="tertiary" @click="editing = false">{{ t('taskpath', 'Cancel change') }}</NcButton>
@@ -101,6 +105,7 @@ function approve() {
 
 <style scoped lang="scss">
 .muted { color: var(--color-text-maxcontrast); }
+.small { font-size: .88em; margin: 0; }
 .doc {
 	display: flex; flex-direction: column; gap: 8px; padding: 12px 14px;
 	border: 1px solid var(--color-border); border-radius: var(--border-radius-large); background: var(--color-main-background);

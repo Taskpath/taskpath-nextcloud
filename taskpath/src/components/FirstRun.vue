@@ -60,6 +60,12 @@
 							<span v-if="rule.derived" class="muted small"> ({{ t('taskpath', 'filed with invoices') }})</span></td>
 					</tr>
 				</table>
+				<p v-if="sharedWith.length" class="muted">
+					{{ t('taskpath', '{intake} is shared with the same people as {archive}: {names}. They can drop documents in it and approve where they have access.', { intake: intakeName, archive, names: sharedWith.join(', ') }) }}
+				</p>
+				<p v-else-if="shareYourself" class="muted">
+					{{ t('taskpath', '{archive} was shared with you, so share {intake} with your colleagues in Files to let them drop documents in it.', { intake: intakeName, archive }) }}
+				</p>
 				<div class="buttons">
 					<NcButton variant="primary" :disabled="rules.source === 'learning'" @click="$emit('ready')">
 						{{ t('taskpath', 'Done: on to {intake}', { intake: intakeName }) }}
@@ -90,6 +96,8 @@ const error = ref('')
 const rules = ref(null)
 const archive = ref('')
 const intake = ref('')
+const sharedWith = ref([])
+const shareYourself = ref(false)
 const intakeName = computed(() => intake.value.replace(/^\//, '') || t('taskpath', 'To file'))
 
 async function connect() {
@@ -126,6 +134,8 @@ async function setup(path) {
 		const result = await api.setup(path)
 		archive.value = result.archive
 		intake.value = result.intake
+		sharedWith.value = result.shared_with || []
+		shareYourself.value = !!result.share_yourself
 		await pollRules()
 	} catch (e) {
 		error.value = e.message

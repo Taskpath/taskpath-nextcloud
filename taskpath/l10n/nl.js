@@ -166,6 +166,16 @@ OC.L10N.register(
  "Open the workspace in Taskpath: every task, check and step of the audit trail": "Open de werkruimte in Taskpath: elke taak, controle en stap in het auditspoor",
  "Audit trail in Taskpath": "Auditspoor in Taskpath",
  "View in Taskpath": "Bekijk in Taskpath",
- "Open in Taskpath": "Openen in Taskpath"
+ "Open in Taskpath": "Openen in Taskpath",
+ "{intake} is shared with the same people as {archive}: {names}. They can drop documents in it and approve where they have access.": "{intake} is gedeeld met dezelfde mensen als {archive}: {names}. Zij kunnen er documenten in zetten en goedkeuren waar ze toegang hebben.",
+ "{archive} was shared with you, so share {intake} with your colleagues in Files to let them drop documents in it.": "{archive} is met jou gedeeld. Deel {intake} via Bestanden met je collega's, dan kunnen zij er ook documenten in zetten.",
+ "Ask {owner} to share the folder {intake} with you, then you can drop documents in it and approve them here.": "Vraag {owner} om de map {intake} met je te delen. Dan kun je er documenten in zetten en ze hier goedkeuren.",
+ "Waiting for someone who has access to {folder}.": "Wacht op iemand met toegang tot {folder}.",
+ "You can't file this document where it's going: you have no access there in Files": "Je kunt dit document niet archiveren waar het heen gaat: je hebt daar geen toegang in Bestanden",
+ "You can't open this document": "Je kunt dit document niet openen",
+ "You can't put this document back: no access to it or to the intake folder": "Je kunt dit document niet terugzetten: geen toegang tot het document of de map om te archiveren",
+ "Only the owner of the archive decides about automatic filing": "Alleen de eigenaar van het archief beslist over automatisch archiveren",
+ "The intake folder isn't shared with you": "De map om te archiveren is niet met je gedeeld",
+ "You can see this intake folder but not add to it": "Je kunt deze map zien, maar er niets aan toevoegen"
 },
 "nplurals=2; plural=(n != 1);");

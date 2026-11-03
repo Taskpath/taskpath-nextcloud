@@ -102,14 +102,17 @@ class Syncer {
 			if ($claimed === null) {
 				continue;
 			}
-			$this->execute($claimed, !empty($claimed['by_itself']) ? '' : (string)($claimed['approved_by'] ?? ''));
+			// Approved by earned autonomy or in Taskpath, not by someone here: the
+			// move is checked with the archive owner's access (0020 §3).
+			$this->execute($claimed, !empty($claimed['by_itself']) ? '' : (string)($claimed['approved_by'] ?? ''),
+				(string)$this->connection->owner());
 		}
 	}
 
 	/** Moves the file for a claimed action and reports how it went. */
-	public function execute(array $action, string $person = ''): array {
+	public function execute(array $action, string $person, string $decider): array {
 		try {
-			$path = $this->filer->file($action, $person);
+			$path = $this->filer->file($action, $person, $decider);
 			return $this->client->reportResult((int)$action['id'], true, $path) + ['path' => $path];
 		} catch (TaskpathException $e) {
 			throw $e;

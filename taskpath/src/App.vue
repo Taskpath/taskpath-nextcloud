@@ -5,9 +5,9 @@
 				<NcLoadingIcon v-if="!state" :size="44" class="taskpath-page__loading" />
 				<NcEmptyContent v-else-if="loadError" :name="t('taskpath', 'Taskpath can\'t be reached')" :description="loadError" />
 				<FirstRun v-else-if="!state.ready" :state="state" @ready="load" />
-				<NcEmptyContent v-else-if="!state.is_owner"
+				<NcEmptyContent v-else-if="!state.has_access"
 					:name="t('taskpath', 'Taskpath is set up by {owner}', { owner: state.owner })"
-					:description="t('taskpath', 'For now one person approves the documents in the intake folder. Shared intake folders come later.')" />
+					:description="t('taskpath', 'Ask {owner} to share the folder {intake} with you, then you can drop documents in it and approve them here.', { owner: state.owner, intake: (state.intake || '').replace(/^\//, '') })" />
 				<Inbox v-else :state="state" />
 			</div>
 		</NcAppContent>

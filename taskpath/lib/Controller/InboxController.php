@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OCA\Taskpath\Controller;
 
 use OCA\Taskpath\AppInfo\Application;
+use OCA\Taskpath\Service\Access;
 use OCA\Taskpath\Service\ArchiveFinder;
 use OCA\Taskpath\Service\Connection;
 use OCA\Taskpath\Service\LearnedRules;
@@ -20,6 +21,7 @@ use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\IRootFolder;
 use OCP\IGroupManager;
+use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUserSession;
@@ -27,7 +29,8 @@ use OCP\IUserSession;
 /**
  * What the Taskpath page shows: the connection's state, the archive it suggests
  * on first run, and the inbox (the documents in the intake folder with their
- * proposals, and what was filed lately).
+ * proposals, and what was filed lately). The intake folder is shared (0020):
+ * everyone it's shared with gets the page, each seeing what they can open.
  */
 class InboxController extends Controller {
 	/** Documents Taskpath hasn't seen yet are sent right away, a few per refresh. */
@@ -42,8 +45,10 @@ class InboxController extends Controller {
 		private ArchiveFinder $finder,
 		private LearnedRules $rules,
 		private Syncer $syncer,
+		private Access $access,
 		private IRootFolder $root,
 		private IUserSession $session,
+		private IL10N $l,
 		private IGroupManager $groups,
 		private IURLGenerator $urls,
 	) {
@@ -66,6 +71,8 @@ class InboxController extends Controller {
 			'ready' => $this->connection->isReady(),
 			'is_admin' => $this->groups->isAdmin($uid),
 			'is_owner' => $owner === null || $owner === $uid,
+			// The intake folder is shared with this person (0020): they get the page.
+			'has_access' => $this->access->intakeFor($uid) !== null,
 			'owner' => $owner,
 			'workspace' => $this->connection->workspace(),
 			'workspace_url' => $this->connection->browserLink($this->connection->workspaceUrl() ?: '/dashboard'),
@@ -96,6 +103,7 @@ class InboxController extends Controller {
 	#[NoAdminRequired]
 	public function list(): DataResponse {
 		return $this->guarded(function () {
+			$uid = $this->uid();
 			$intake = $this->intake();
 			try {
 				$this->syncer->fileApprovedElsewhere();
@@ -106,6 +114,9 @@ class InboxController extends Controller {
 				$filing['task_url'] = $this->connection->browserLink($filing['task_url'] ?? null);
 				return $filing;
 			}, $this->client->recentFilings());
+			// Only what this person can open in Files, and they may decide only
+			// where they could put the document themselves (0020 §2, §5).
+			$filings = array_values(array_filter($filings, fn ($f) => $this->access->canRead($uid, (int)$f['file_id'])));
 			$byFile = [];
 			foreach ($filings as $filing) {
 				$byFile[(string)$filing['file_id']] ??= $filing; // newest first
@@ -128,6 +139,9 @@ class InboxController extends Controller {
 						$filing = null;
 					}
 				}
+				if ($filing !== null && in_array($filing['status'], ['proposed', 'needs_look'], true)) {
+					$filing['can_decide'] = $this->access->canDecide($uid, $filing);
+				}
 				$documents[] = [
 					'file' => [
 						'id' => $node->getId(),
@@ -143,15 +157,23 @@ class InboxController extends Controller {
 
 			$filed = array_values(array_filter($filings, fn ($f) => $f['status'] === 'filed'
 				|| (($f['proposal']['undone'] ?? 0) > 0)));
+			foreach ($filed as &$item) {
+				$item['undoable'] = !empty($item['undoable']) && $this->access->canUndo($uid, $item);
+			}
+			unset($item);
 			$offers = [];
-			try {
-				foreach ($this->client->autonomy()['kinds'] ?? [] as $kind) {
-					if (!empty($kind['offer'])) {
-						$offers[] = $kind;
+			// Granting autonomy is a decision about every future document of a kind:
+			// only the archive's owner is asked (0020 §4).
+			if ($this->access->isOwner($uid)) {
+				try {
+					foreach ($this->client->autonomy()['kinds'] ?? [] as $kind) {
+						if (!empty($kind['offer'])) {
+							$offers[] = $kind;
+						}
 					}
+				} catch (TaskpathException) {
+					// Offers are a nicety; the inbox works without them.
 				}
-			} catch (TaskpathException) {
-				// Offers are a nicety; the inbox works without them.
 			}
 			return ['documents' => $documents, 'filed' => array_slice($filed, 0, 20), 'offers' => $offers];
 		});
@@ -169,19 +191,23 @@ class InboxController extends Controller {
 				throw new \RuntimeException('That file is larger than 25 MB');
 			}
 			$intake = $this->intake();
+			if (!$intake->isCreatable()) {
+				throw new \RuntimeException($this->l->t('You can see this intake folder but not add to it'));
+			}
 			$name = $this->freeName($intake, basename((string)$upload['name']));
 			$file = $intake->newFile($name, fopen($upload['tmp_name'], 'r'));
 			return ['file_id' => $file->getId(), 'name' => $file->getName(), 'filing' => $this->uploader->upload($file->getId())];
 		});
 	}
 
+	/** The intake folder as the person looking at the page sees it. */
 	private function intake(): Folder {
-		$home = $this->root->getUserFolder((string)$this->connection->owner());
-		$intake = $home->getById((int)$this->connection->intakeId())[0] ?? null;
-		if (!$intake instanceof Folder) {
-			throw new \RuntimeException('The intake folder is missing; set it up again');
-		}
-		return $intake;
+		return $this->access->intakeFor($this->uid())
+			?? throw new \RuntimeException('The intake folder is missing or no longer shared with you');
+	}
+
+	private function uid(): string {
+		return (string)$this->session->getUser()?->getUID();
 	}
 
 	private function freeName(Folder $folder, string $name): string {
@@ -196,8 +222,8 @@ class InboxController extends Controller {
 	}
 
 	private function guarded(callable $work): DataResponse {
-		if (!$this->connection->isReady() || $this->session->getUser()?->getUID() !== $this->connection->owner()) {
-			return new DataResponse(['error' => 'Not your intake folder'], Http::STATUS_FORBIDDEN);
+		if (!$this->connection->isReady() || $this->access->intakeFor($this->uid()) === null) {
+			return new DataResponse(['error' => $this->l->t('The intake folder isn\'t shared with you')], Http::STATUS_FORBIDDEN);
 		}
 		try {
 			return new DataResponse($work());

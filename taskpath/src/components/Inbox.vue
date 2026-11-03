@@ -99,8 +99,9 @@ let timer = null
 
 const logo = imagePath('taskpath', 'logo.svg')
 const intakeName = computed(() => (props.state.intake || '').replace(/^\//, ''))
-const ready = computed(() => documents.value.filter((d) => d.filing?.status === 'proposed' && d.filing.action?.state === 'awaiting_approval'))
-const waiting = computed(() => documents.value.filter((d) => ['proposed', 'needs_look'].includes(d.filing?.status) && d.filing.action?.state === 'awaiting_approval').length)
+const ready = computed(() => documents.value.filter((d) => d.filing?.status === 'proposed' && d.filing.action?.state === 'awaiting_approval'
+	&& d.filing.can_decide !== false))
+const waiting = computed(() => documents.value.filter((d) => ['proposed', 'needs_look'].includes(d.filing?.status) && d.filing.action?.state === 'awaiting_approval' && d.filing.can_decide !== false).length)
 const isToday = (iso) => iso && new Date(iso).toDateString() === new Date().toDateString()
 const filedToday = computed(() => filed.value.filter((f) => f.status === 'filed' && isToday(f.filed_at)).length)
 const autoToday = computed(() => filed.value.filter((f) => f.status === 'filed' && f.filed_by_itself && isToday(f.filed_at)).length)

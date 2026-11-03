@@ -14,12 +14,16 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\RedirectResponse;
+use OCP\Constants;
 use OCP\Files\Folder;
 use OCP\Files\IRootFolder;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUserSession;
+use OCP\Share\IManager as ShareManager;
+use OCP\Share\IShare;
+use Psr\Log\LoggerInterface;
 
 /**
  * Connecting to Taskpath, for an admin: one button, a browser round trip to
@@ -36,6 +40,8 @@ class ConnectController extends Controller {
 		private IURLGenerator $urls,
 		private IUserSession $session,
 		private IL10N $l,
+		private ShareManager $shares,
+		private LoggerInterface $logger,
 	) {
 		parent::__construct(Application::APP_ID, $request);
 	}
@@ -96,6 +102,8 @@ class ConnectController extends Controller {
 			return new DataResponse(['error' => $this->l->t('A file named "%1$s" is in the way', [$intakeName])], Http::STATUS_CONFLICT);
 		}
 
+		$sharedWith = $this->shareLikeArchive($archiveFolder, $intake, $uid);
+
 		$archivePath = $home->getRelativePath($archiveFolder->getPath());
 		$intakePath = $home->getRelativePath($intake->getPath());
 		$this->connection->saveFolders($archiveFolder->getId(), $intake->getId(), $archivePath, $intakePath);
@@ -106,8 +114,44 @@ class ConnectController extends Controller {
 		} catch (TaskpathException $e) {
 			return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_GATEWAY);
 		}
-		return new DataResponse(['archive' => $archivePath, 'intake' => $intakePath,
+		return new DataResponse(['archive' => $archivePath, 'intake' => $intakePath, 'shared_with' => $sharedWith,
+			// Someone else's folder, shared with you: its shares aren't yours to copy.
+			'share_yourself' => $sharedWith === null,
 			'intake_url' => $this->urls->linkToRoute('files.View.showFile', ['fileid' => $intake->getId()])]);
+	}
+
+	/**
+	 * The intake folder is shared (0020 §1): with the same people and groups as
+	 * the archive, so whoever files there can drop documents here. They may add
+	 * and change files, not reshare. Returns who it's shared with (display names),
+	 * or null when the archive is someone else's and they have to share it.
+	 *
+	 * @return string[]|null
+	 */
+	private function shareLikeArchive(Folder $archive, Folder $intake, string $uid): ?array {
+		if ($archive->getOwner()?->getUID() !== $uid) {
+			return null;
+		}
+		$names = [];
+		foreach ([IShare::TYPE_USER, IShare::TYPE_GROUP] as $type) {
+			try {
+				$already = array_map(fn (IShare $share) => $share->getSharedWith(), $this->shares->getSharesBy($uid, $type, $intake, false, -1));
+				foreach ($this->shares->getSharesBy($uid, $type, $archive, false, -1) as $share) {
+					$names[] = $share->getSharedWithDisplayName() ?: $share->getSharedWith();
+					if (in_array($share->getSharedWith(), $already, true)) {
+						continue;
+					}
+					$copy = $this->shares->newShare();
+					$copy->setNode($intake)->setShareType($type)->setSharedWith($share->getSharedWith())->setSharedBy($uid)
+						->setPermissions(Constants::PERMISSION_READ | Constants::PERMISSION_CREATE | Constants::PERMISSION_UPDATE | Constants::PERMISSION_DELETE);
+					$this->shares->createShare($copy);
+				}
+			} catch (\Exception $e) {
+				// Sharing may be restricted on this server; the folder still works for its owner.
+				$this->logger->warning('Taskpath: could not share the intake folder: ' . $e->getMessage(), ['app' => 'taskpath']);
+			}
+		}
+		return array_values(array_unique($names));
 	}
 
 	/** Removes the link both ways; Taskpath deletes what it held for this folder. */

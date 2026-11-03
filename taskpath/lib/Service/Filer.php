@@ -30,11 +30,19 @@ class Filer {
 		private Connection $connection,
 		private Marker $marker,
 		private Activity $activity,
+		private Access $access,
 	) {
 	}
 
-	/** Moves the file and returns its new path relative to the owner's home. */
-	public function file(array $action, string $person = ''): string {
+	/**
+	 * Moves the file and returns its new path relative to the owner's home. Checks
+	 * once more, right before moving, that the person who decided may put it there.
+	 */
+	public function file(array $action, string $person, string $decider): string {
+		if (!$this->access->canRead($decider, (int)$action['file_id'])
+			|| !$this->access->canFileInto($decider, (string)($action['folder'] ?? ''))) {
+			throw new \RuntimeException('No access to put the document there any more');
+		}
 		$owner = $this->connection->owner() ?? throw new \RuntimeException('Not set up');
 		$home = $this->root->getUserFolder($owner);
 		$intake = $this->folderById($home, $this->connection->intakeId());
