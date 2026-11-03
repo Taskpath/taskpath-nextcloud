@@ -140,6 +140,12 @@ class TaskpathClient {
 		};
 		$status = $response->getStatusCode();
 		$body = (string)$response->getBody();
+		if ($status === 401 && $auth) {
+			// Disconnected (or replaced) on Taskpath's side: the token is gone for good,
+			// so the page offers to connect again instead of failing on every call.
+			$this->connection->forget();
+			throw new TaskpathException('Disconnected from Taskpath; connect again', 401);
+		}
 		if ($status >= 400) {
 			$error = json_decode($body, true)['error'] ?? 'Taskpath answered ' . $status;
 			throw new TaskpathException($error, $status);
