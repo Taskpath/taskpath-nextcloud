@@ -4,12 +4,14 @@
 			<div>
 				<h2>{{ intakeName }}</h2>
 				<p class="muted">
-					<a v-if="state.workspace_url" class="workspace" :href="state.workspace_url" target="_blank" rel="noopener"
-						:title="t('taskpath', 'Open the workspace in Taskpath: every task, check and step of the audit trail')">
-						<img :src="logo" alt="" class="workspace__logo">{{ state.workspace }}<span aria-hidden="true"> ↗</span>
-					</a>
-					<span v-else>{{ state.workspace }}</span>
-					· {{ t('taskpath', 'archive') }} <code>{{ state.archive }}</code>
+					{{ state.workspace }} · {{ t('taskpath', 'archive') }} <code>{{ state.archive }}</code>
+					<template v-if="state.workspace_url">
+						·
+						<a class="workspace" :href="state.workspace_url" target="_blank" rel="noopener"
+							:title="t('taskpath', 'Open the workspace in Taskpath: every task, check and step of the audit trail')">
+							<img :src="logo" alt="" class="workspace__logo">{{ t('taskpath', 'Open in Taskpath') }}<span aria-hidden="true"> ↗</span>
+						</a>
+					</template>
 				</p>
 			</div>
 			<div class="stats" aria-live="polite">

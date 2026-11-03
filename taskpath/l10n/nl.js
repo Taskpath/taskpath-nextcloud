@@ -165,6 +165,7 @@ OC.L10N.register(
  ],
  "Open the workspace in Taskpath: every task, check and step of the audit trail": "Open de werkruimte in Taskpath: elke taak, controle en stap in het auditspoor",
  "Audit trail in Taskpath": "Auditspoor in Taskpath",
- "View in Taskpath": "Bekijk in Taskpath"
+ "View in Taskpath": "Bekijk in Taskpath",
+ "Open in Taskpath": "Openen in Taskpath"
 },
 "nplurals=2; plural=(n != 1);");
