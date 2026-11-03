@@ -35,6 +35,7 @@
 				<NcButton v-if="!editing" @click="startEdit">{{ t('taskpath', 'Change') }}</NcButton>
 				<NcButton v-else variant="tertiary" @click="editing = false">{{ t('taskpath', 'Cancel change') }}</NcButton>
 				<NcButton variant="tertiary" @click="$emit('skip', doc)">{{ t('taskpath', 'Skip') }}</NcButton>
+				<a v-if="filing.task_url" class="trail" :href="filing.task_url" target="_blank" rel="noopener">{{ t('taskpath', 'View in Taskpath') }} ↗</a>
 			</div>
 		</template>
 	</article>
@@ -133,5 +134,9 @@ function approve() {
 	li { font-size: .88em; padding: 2px 8px; border: 1px solid var(--color-border); border-radius: 6px; color: var(--color-text-maxcontrast); }
 	b { color: var(--color-main-text); }
 }
-.buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+.buttons { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.trail {
+	margin-inline-start: auto; font-size: .88em; color: var(--color-text-maxcontrast); text-decoration: underline;
+	&:hover, &:focus-visible { color: var(--color-main-text); }
+}
 </style>

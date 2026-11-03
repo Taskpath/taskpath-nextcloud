@@ -68,6 +68,7 @@ class InboxController extends Controller {
 			'is_owner' => $owner === null || $owner === $uid,
 			'owner' => $owner,
 			'workspace' => $this->connection->workspace(),
+			'workspace_url' => $this->connection->browserLink($this->connection->workspaceUrl() ?: '/dashboard'),
 			'intake' => $this->connection->intakePath(),
 			'archive' => $this->connection->archivePath(),
 			'intake_url' => $this->connection->intakeId()
@@ -101,7 +102,10 @@ class InboxController extends Controller {
 			} catch (\Exception) {
 				// Filing happens again on the next refresh or by the background job.
 			}
-			$filings = $this->client->recentFilings();
+			$filings = array_map(function (array $filing) {
+				$filing['task_url'] = $this->connection->browserLink($filing['task_url'] ?? null);
+				return $filing;
+			}, $this->client->recentFilings());
 			$byFile = [];
 			foreach ($filings as $filing) {
 				$byFile[(string)$filing['file_id']] ??= $filing; // newest first

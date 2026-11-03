@@ -80,6 +80,19 @@ class Connection {
 		}
 	}
 
+	/**
+	 * A Taskpath page for the browser. Taskpath builds its links from the address the
+	 * server reached it on, which can differ from the one people use (as in Docker).
+	 */
+	public function browserLink(?string $taskpathUrl): ?string {
+		$path = $taskpathUrl ? parse_url($taskpathUrl, PHP_URL_PATH) : null;
+		if (!is_string($path) || !str_starts_with($path, '/')) {
+			return null;
+		}
+		$query = parse_url((string)$taskpathUrl, PHP_URL_QUERY);
+		return $this->url() . $path . ($query ? '?' . $query : '');
+	}
+
 	public function owner(): ?string {
 		return $this->config->getValueString(Application::APP_ID, 'owner', '') ?: null;
 	}

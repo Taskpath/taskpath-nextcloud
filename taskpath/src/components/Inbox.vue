@@ -3,7 +3,14 @@
 		<header class="inbox__head">
 			<div>
 				<h2>{{ intakeName }}</h2>
-				<p class="muted">{{ state.workspace }} · {{ t('taskpath', 'archive') }} <code>{{ state.archive }}</code></p>
+				<p class="muted">
+					<a v-if="state.workspace_url" class="workspace" :href="state.workspace_url" target="_blank" rel="noopener"
+						:title="t('taskpath', 'Open the workspace in Taskpath: every task, check and step of the audit trail')">
+						<img :src="logo" alt="" class="workspace__logo">{{ state.workspace }}<span aria-hidden="true"> ↗</span>
+					</a>
+					<span v-else>{{ state.workspace }}</span>
+					· {{ t('taskpath', 'archive') }} <code>{{ state.archive }}</code>
+				</p>
 			</div>
 			<div class="stats" aria-live="polite">
 				<span class="stat"><b>{{ waiting }}</b> {{ t('taskpath', 'waiting for you') }}</span>
@@ -16,7 +23,7 @@
 			<section :aria-label="t('taskpath', 'Arrived')">
 				<div class="col-title">
 					<span>{{ t('taskpath', 'Arrived') }}</span>
-					<NcButton v-if="ready.length > 1" variant="tertiary" @click="approveAll">
+					<NcButton v-if="ready.length > 1" variant="primary" @click="approveAll">
 						{{ t('taskpath', 'Approve all {count} proposals', { count: ready.length }) }}
 					</NcButton>
 				</div>
@@ -68,6 +75,7 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { n, t } from '@nextcloud/l10n'
+import { imagePath } from '@nextcloud/router'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
@@ -87,6 +95,7 @@ const fresh = ref(new Set())
 let known = null
 let timer = null
 
+const logo = imagePath('taskpath', 'logo.svg')
 const intakeName = computed(() => (props.state.intake || '').replace(/^\//, ''))
 const ready = computed(() => documents.value.filter((d) => d.filing?.status === 'proposed' && d.filing.action?.state === 'awaiting_approval'))
 const waiting = computed(() => documents.value.filter((d) => ['proposed', 'needs_look'].includes(d.filing?.status) && d.filing.action?.state === 'awaiting_approval').length)
@@ -188,6 +197,11 @@ code { font-size: .9em; }
 	display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: flex-end; justify-content: space-between; margin-bottom: 18px;
 	h2 { font-size: 1.6em; margin: 0; }
 	p { margin: 2px 0 0; }
+}
+.workspace {
+	color: inherit; font-weight: bold; text-decoration: none;
+	&:hover, &:focus-visible { color: var(--color-main-text); text-decoration: underline; }
+	&__logo { width: 1.25em; height: 1.25em; vertical-align: -.25em; margin-inline-end: 2px; }
 }
 .stats { display: flex; flex-wrap: wrap; gap: 8px; }
 .stat {

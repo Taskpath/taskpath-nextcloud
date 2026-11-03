@@ -9,8 +9,9 @@
 		<div class="item__path"><span class="muted">{{ folder }}</span>{{ base }}</div>
 		<div class="muted small">{{ undone ? t('taskpath', 'Back in the intake folder as {name}', { name: item.name }) : t('taskpath', 'arrived as {name}', { name: item.name }) }}</div>
 		<div v-if="item.filed_by_itself && !undone" class="item__why">{{ why }}</div>
-		<div v-if="item.undoable && !undone">
-			<NcButton variant="tertiary" @click="$emit('undo', item)">{{ t('taskpath', 'Undo') }}</NcButton>
+		<div class="item__actions">
+			<NcButton v-if="item.undoable && !undone" variant="tertiary" @click="$emit('undo', item)">{{ t('taskpath', 'Undo') }}</NcButton>
+			<a v-if="item.task_url" class="trail" :href="item.task_url" target="_blank" rel="noopener">{{ t('taskpath', 'Audit trail in Taskpath') }} ↗</a>
 		</div>
 	</div>
 </template>
@@ -50,7 +51,12 @@ const why = computed(() => t('taskpath', 'Automatic because: {checks}', {
 	&--fresh { animation: arrive 1.8s ease-out; }
 	&__top { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
 	&__path { font-family: var(--font-face-monospace, monospace); font-size: .88em; overflow-wrap: anywhere; }
+	&__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; min-height: 8px; }
 	&__why { font-size: .88em; color: var(--color-primary-element); }
+}
+.trail {
+	font-size: .88em; color: var(--color-text-maxcontrast); text-decoration: underline;
+	&:hover, &:focus-visible { color: var(--color-main-text); }
 }
 .badge {
 	font-size: .8em; font-weight: bold; letter-spacing: .02em; padding: 1px 8px; border-radius: var(--border-radius-pill, 999px);
