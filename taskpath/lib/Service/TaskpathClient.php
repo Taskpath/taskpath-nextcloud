@@ -21,6 +21,10 @@ class TaskpathClient {
 		return $this->request('POST', '/api/v1/connect/exchange', ['json' => ['code' => $code, 'code_verifier' => $verifier]], auth: false);
 	}
 
+	public function connection(): array {
+		return $this->request('GET', '/api/v1/connection', timeout: 5);
+	}
+
 	public function updateConnection(array $settings): array {
 		return $this->request('PATCH', '/api/v1/connection', ['json' => $settings]);
 	}

@@ -73,6 +73,13 @@ class Connection {
 		}
 	}
 
+	/** The workspace may be renamed in Taskpath; keep the copy shown here current. */
+	public function rememberWorkspaceName(string $name): void {
+		if ($name !== '' && $name !== $this->workspace()) {
+			$this->config->setValueString(Application::APP_ID, 'workspace', $name);
+		}
+	}
+
 	public function owner(): ?string {
 		return $this->config->getValueString(Application::APP_ID, 'owner', '') ?: null;
 	}

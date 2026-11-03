@@ -54,6 +54,13 @@ class InboxController extends Controller {
 	public function state(): DataResponse {
 		$uid = $this->session->getUser()->getUID();
 		$owner = $this->connection->owner();
+		if ($this->connection->isConnected()) {
+			try {
+				$this->connection->rememberWorkspaceName((string)($this->client->connection()['workspace']['name'] ?? ''));
+			} catch (\Exception) {
+				// Show the name we have; Taskpath may be briefly unreachable.
+			}
+		}
 		return new DataResponse([
 			'connected' => $this->connection->isConnected(),
 			'ready' => $this->connection->isReady(),
