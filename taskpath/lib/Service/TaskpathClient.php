@@ -38,13 +38,18 @@ class TaskpathClient {
 	}
 
 	/** @param resource|string $content */
-	public function upload(string $fileId, string $etag, string $path, string $name, $content, string $mime): array {
-		return $this->request('POST', '/api/v1/filings', ['multipart' => [
+	public function upload(string $fileId, string $etag, string $path, string $name, $content, string $mime, ?array $droppedBy = null): array {
+		$parts = [
 			['name' => 'file_id', 'contents' => $fileId],
 			['name' => 'etag', 'contents' => $etag],
 			['name' => 'path', 'contents' => $path],
 			['name' => 'file', 'contents' => $content, 'filename' => $name, 'headers' => ['Content-Type' => $mime]],
-		]], timeout: 60);
+		];
+		if ($droppedBy !== null) {
+			$parts[] = ['name' => 'dropped_by[id]', 'contents' => $droppedBy['id']];
+			$parts[] = ['name' => 'dropped_by[name]', 'contents' => $droppedBy['name']];
+		}
+		return $this->request('POST', '/api/v1/filings', ['multipart' => $parts], timeout: 60);
 	}
 
 	public function filingForFile(string $fileId): ?array {
@@ -114,8 +119,8 @@ class TaskpathClient {
 		}
 	}
 
-	public function reportResult(int $actionId, bool $ok, string $pathOrError): array {
-		$body = $ok ? ['ok' => true, 'path' => $pathOrError] : ['ok' => false, 'error' => $pathOrError];
+	public function reportResult(int $actionId, bool $ok, string $pathOrError, ?array $movedAs = null): array {
+		$body = $ok ? ['ok' => true, 'path' => $pathOrError, 'moved_as' => $movedAs] : ['ok' => false, 'error' => $pathOrError];
 		return $this->request('POST', '/api/v1/actions/' . $actionId . '/result', ['json' => $body]);
 	}
 

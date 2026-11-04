@@ -175,7 +175,9 @@
   "You can't put this document back: no access to it or to the intake folder": "Je kunt dit document niet terugzetten: geen toegang tot het document of de map om te archiveren",
   "Only the owner of the archive decides about automatic filing": "Alleen de eigenaar van het archief beslist over automatisch archiveren",
   "The intake folder isn't shared with you": "De map om te archiveren is niet met je gedeeld",
-  "You can see this intake folder but not add to it": "Je kunt deze map zien, maar er niets aan toevoegen"
+  "You can see this intake folder but not add to it": "Je kunt deze map zien, maar er niets aan toevoegen",
+  "arrived as {name}, from {person}": "binnengekomen als {name}, van {person}",
+  "from {person}": "van {person}"
  },
  "pluralForm": "nplurals=2; plural=(n != 1);"
 }

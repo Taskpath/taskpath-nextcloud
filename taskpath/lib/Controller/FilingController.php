@@ -72,7 +72,7 @@ class FilingController extends Controller {
 			}
 			$this->ensure($this->access->canUndo($this->uid(), $filing), $this->l->t('You can\'t put this document back: no access to it or to the intake folder'));
 			$person = $this->person();
-			$this->filer->returnToIntake((int)$filing['file_id'], (string)$filing['name'], $person['name']);
+			$this->filer->returnToIntake((int)$filing['file_id'], (string)$filing['name'], $person['name'], $this->uid());
 			$reopened = $this->client->undo($id, $person);
 			return ['filing' => $reopened];
 		});

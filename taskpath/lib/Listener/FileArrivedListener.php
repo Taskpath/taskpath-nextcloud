@@ -13,6 +13,7 @@ use OCP\Files\Events\Node\NodeCreatedEvent;
 use OCP\Files\Events\Node\NodeRenamedEvent;
 use OCP\Files\File;
 use OCA\Taskpath\Service\Filer;
+use OCP\IUserSession;
 
 /**
  * Queues a document for Taskpath when it lands in the intake folder (uploaded,
@@ -28,6 +29,7 @@ class FileArrivedListener implements IEventListener {
 	public function __construct(
 		private Connection $connection,
 		private IJobList $jobs,
+		private IUserSession $session,
 	) {
 	}
 
@@ -50,6 +52,10 @@ class FileArrivedListener implements IEventListener {
 		// Moved back by Undo: Taskpath already reopened its proposal.
 		if (isset(Filer::$returning[$node->getId()])) {
 			return;
+		}
+		// Whoever's request this is put it here: from Files, the desktop client or the page.
+		if (($uid = $this->session->getUser()?->getUID()) !== null) {
+			$this->connection->rememberDropper($node->getId(), $uid);
 		}
 		$this->jobs->add(UploadFile::class, ['file_id' => $node->getId()]);
 	}

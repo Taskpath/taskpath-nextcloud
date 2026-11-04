@@ -1,7 +1,10 @@
 <template>
 	<article class="doc" :class="{ 'doc--look': status === 'needs_look', 'doc--quiet': status === 'skipped' }">
 		<div class="doc__top">
-			<a class="doc__name" :href="doc.file.url">{{ doc.file.name }}</a>
+			<span class="doc__who">
+				<a class="doc__name" :href="doc.file.url">{{ doc.file.name }}</a>
+				<span v-if="filing?.dropped_by" class="muted small">{{ t('taskpath', 'from {person}', { person: filing.dropped_by.name }) }}</span>
+			</span>
 			<span class="pill" :class="'pill--' + pill.kind">
 				<NcLoadingIcon v-if="pill.busy" :size="14" inline />{{ pill.text }}
 			</span>
@@ -113,6 +116,7 @@ function approve() {
 	&--quiet { opacity: .65; }
 	&__top { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
 	&__name { font-weight: bold; overflow-wrap: anywhere; }
+	&__who { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; min-width: 0; }
 }
 .pill {
 	display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: var(--border-radius-pill, 999px);

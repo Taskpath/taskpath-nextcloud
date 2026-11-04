@@ -6,13 +6,11 @@ namespace OCA\Taskpath\Service;
 
 use OCP\Files\File;
 use OCP\Files\Folder;
-use OCP\Files\IRootFolder;
-use OCP\Files\NotFoundException;
 use OCP\Activity\IManager as Activity;
 
 /**
- * Carries out an approved filing inside this Nextcloud, as the intake folder's
- * owner: move the file from the intake folder to its folder under the archive,
+ * Carries out an approved filing inside this Nextcloud, as the person who
+ * decided (0020 §3): move the file from the intake folder to its folder under the archive,
  * under its new name. Checks here, not just in Taskpath, that the file is still
  * in the intake folder and the destination stays inside the archive.
  */
@@ -26,7 +24,6 @@ class Filer {
 	public static array $returning = [];
 
 	public function __construct(
-		private IRootFolder $root,
 		private Connection $connection,
 		private Marker $marker,
 		private Activity $activity,
@@ -35,58 +32,54 @@ class Filer {
 	}
 
 	/**
-	 * Moves the file and returns its new path relative to the owner's home. Checks
-	 * once more, right before moving, that the person who decided may put it there.
+	 * Moves the file as the person who decided (0020 §3), through their own view
+	 * of the folders, and returns its new path relative to the owner's home (what
+	 * Taskpath records). Checks once more, right before moving, that they may.
 	 */
 	public function file(array $action, string $person, string $decider): string {
-		if (!$this->access->canRead($decider, (int)$action['file_id'])
-			|| !$this->access->canFileInto($decider, (string)($action['folder'] ?? ''))) {
+		$this->segments((string)($action['folder'] ?? '')); // inside the archive, before looking anything up
+		$file = $this->access->movableFor($decider, (int)$action['file_id']);
+		if ($file === null || $file->getParent()->getId() !== $this->connection->intakeId()) {
+			throw new \RuntimeException('The document is no longer in the intake folder, or can\'t be moved by this person');
+		}
+		$destination = $this->access->destinationFor($decider, (string)($action['folder'] ?? ''));
+		if ($destination === null) {
 			throw new \RuntimeException('No access to put the document there any more');
 		}
-		$owner = $this->connection->owner() ?? throw new \RuntimeException('Not set up');
-		$home = $this->root->getUserFolder($owner);
-		$intake = $this->folderById($home, $this->connection->intakeId());
-		$archive = $this->folderById($home, $this->connection->archiveId());
-
-		$file = $home->getById((int)$action['file_id'])[0] ?? null;
-		if (!$file instanceof File || $file->getParent()->getId() !== $intake->getId()) {
-			throw new \RuntimeException('The document is no longer in the intake folder');
-		}
-
-		$target = $archive;
-		foreach ($this->segments((string)($action['folder'] ?? '')) as $segment) {
-			$target = $target->nodeExists($segment) ? $target->get($segment) : $target->newFolder($segment);
-			if (!$target instanceof Folder) {
-				throw new \RuntimeException('A file is in the way of folder ' . $segment);
-			}
+		[$target, $missing] = $destination;
+		foreach ($missing as $segment) {
+			$target = $target->newFolder($segment);
 		}
 
 		$name = $this->freeName($target, $this->cleanName((string)$action['name']));
 		$moved = $file->move($target->getPath() . '/' . $name);
 		$this->marker->clear((string)$moved->getId());
-		$path = $home->getRelativePath($moved->getPath());
+		$path = $this->access->ownerPath($moved->getId()) ?? $moved->getName();
 		$this->publish(!empty($action['by_itself']) ? 'filed_itself' : 'filed', $moved->getId(), $moved->getName(), $path,
-			$home->getRelativePath($moved->getParent()->getPath()), $person);
+			dirname($path), $person);
 		return $path;
 	}
 
 	/**
 	 * Undo: moves a filed document back into the intake folder under its original
-	 * name. Only for a file that is still under the archive folder.
+	 * name, as the person undoing it. Only for a file that is still under the
+	 * archive folder.
 	 */
-	public function returnToIntake(int $fileId, string $originalName, string $person): string {
-		$owner = $this->connection->owner() ?? throw new \RuntimeException('Not set up');
-		$home = $this->root->getUserFolder($owner);
-		$intake = $this->folderById($home, $this->connection->intakeId());
-		$archive = $this->folderById($home, $this->connection->archiveId());
-		$file = $home->getById($fileId)[0] ?? null;
-		if (!$file instanceof File || !str_starts_with($file->getPath(), $archive->getPath() . '/')) {
+	public function returnToIntake(int $fileId, string $originalName, string $person, string $decider): string {
+		$archivePath = $this->connection->archivePath();
+		$current = $this->access->ownerPath($fileId);
+		$file = $this->access->movableFor($decider, $fileId);
+		$intake = $this->access->intakeFor($decider);
+		if ($file === null || $current === null || !str_starts_with($current, rtrim((string)$archivePath, '/') . '/')) {
 			throw new \RuntimeException('The document is no longer where Taskpath filed it');
+		}
+		if ($intake === null || !$intake->isCreatable()) {
+			throw new \RuntimeException('No access to put the document back in the intake folder');
 		}
 		self::$returning[$fileId] = true;
 		$moved = $file->move($intake->getPath() . '/' . $this->freeName($intake, $this->cleanName($originalName)));
-		$path = $home->getRelativePath($moved->getPath());
-		$this->publish('undone', $moved->getId(), $moved->getName(), $path, $home->getRelativePath($intake->getPath()), $person);
+		$path = $this->access->ownerPath($moved->getId()) ?? $moved->getName();
+		$this->publish('undone', $moved->getId(), $moved->getName(), $path, (string)$this->connection->intakePath(), $person);
 		return $path;
 	}
 
@@ -103,14 +96,6 @@ class Filer {
 		} catch (\Exception) {
 			// The activity app may be disabled; filing doesn't depend on it.
 		}
-	}
-
-	private function folderById(Folder $home, ?int $id): Folder {
-		$folder = $id ? ($home->getById($id)[0] ?? null) : null;
-		if (!$folder instanceof Folder) {
-			throw new NotFoundException('A Taskpath folder is missing; set it up again in the settings');
-		}
-		return $folder;
 	}
 
 	/** @return string[] */

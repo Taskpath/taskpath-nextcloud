@@ -52,27 +52,54 @@ class Access {
 	 * this person, so a share of just that subfolder counts too.
 	 */
 	public function canFileInto(string $uid, string $folder): bool {
+		return $this->destinationFor($uid, $folder) !== null;
+	}
+
+	/**
+	 * Where this person would put a document for this folder under the archive:
+	 * the deepest existing folder, as they see it and can add to, plus the
+	 * folders still to create in it. Null if they can't.
+	 *
+	 * @return array{0: Folder, 1: string[]}|null
+	 */
+	public function destinationFor(string $uid, string $folder): ?array {
 		$owner = $this->connection->owner();
 		$target = $owner ? $this->nodeFor($owner, $this->connection->archiveId()) : null;
 		if (!$target instanceof Folder) {
-			return false;
+			return null;
 		}
-		foreach (array_filter(array_map('trim', explode('/', $folder)), fn ($s) => $s !== '') as $segment) {
-			if (!$target->nodeExists($segment)) {
-				break; // created on filing: needs create rights in the deepest existing folder
-			}
-			$next = $target->get($segment);
+		$segments = array_values(array_filter(array_map('trim', explode('/', $folder)), fn ($s) => $s !== ''));
+		while ($segments !== [] && $target->nodeExists($segments[0])) {
+			$next = $target->get($segments[0]);
 			if (!$next instanceof Folder) {
-				return false;
+				return null; // a file is in the way
 			}
 			$target = $next;
+			array_shift($segments);
 		}
 		foreach ($this->nodesFor($uid, $target->getId()) as $seen) {
 			if ($seen instanceof Folder && $seen->isCreatable()) {
-				return true;
+				return [$seen, $segments];
 			}
 		}
-		return false;
+		return null;
+	}
+
+	/** The document as this person sees it, where they may also move it away. */
+	public function movableFor(string $uid, int $fileId): ?File {
+		foreach ($this->nodesFor($uid, $fileId) as $file) {
+			if ($file instanceof File && $file->isReadable() && $file->isDeletable()) {
+				return $file;
+			}
+		}
+		return null;
+	}
+
+	/** The owner's path for a node (what Taskpath records), from wherever it was moved. */
+	public function ownerPath(int $id): ?string {
+		$owner = $this->connection->owner();
+		$node = $owner ? $this->nodeFor($owner, $id) : null;
+		return $node ? $this->root->getUserFolder($owner)->getRelativePath($node->getPath()) : null;
 	}
 
 	/** Approve, change or skip: read the document, and file it where it's going. */
@@ -87,15 +114,7 @@ class Access {
 	 */
 	public function canUndo(string $uid, array $filing): bool {
 		$intake = $this->intakeFor($uid);
-		if ($intake === null || !$intake->isCreatable()) {
-			return false;
-		}
-		foreach ($this->nodesFor($uid, (int)$filing['file_id']) as $file) {
-			if ($file instanceof File && $file->isReadable() && $file->isDeletable()) {
-				return true;
-			}
-		}
-		return false;
+		return $intake !== null && $intake->isCreatable() && $this->movableFor($uid, (int)$filing['file_id']) !== null;
 	}
 
 	public function isOwner(string $uid): bool {

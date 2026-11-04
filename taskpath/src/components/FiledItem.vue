@@ -7,7 +7,9 @@
 			<span v-if="item.filed_at" class="muted small">{{ time }}</span>
 		</div>
 		<div class="item__path"><span class="muted">{{ folder }}</span>{{ base }}</div>
-		<div class="muted small">{{ undone ? t('taskpath', 'Back in the intake folder as {name}', { name: item.name }) : t('taskpath', 'arrived as {name}', { name: item.name }) }}</div>
+		<div class="muted small">{{ undone ? t('taskpath', 'Back in the intake folder as {name}', { name: item.name }) : (item.dropped_by
+			? t('taskpath', 'arrived as {name}, from {person}', { name: item.name, person: item.dropped_by.name })
+			: t('taskpath', 'arrived as {name}', { name: item.name })) }}</div>
 		<div v-if="item.filed_by_itself && !undone" class="item__why">{{ why }}</div>
 		<div class="item__actions">
 			<NcButton v-if="item.undoable && !undone" variant="tertiary" @click="$emit('undo', item)">{{ t('taskpath', 'Undo') }}</NcButton>

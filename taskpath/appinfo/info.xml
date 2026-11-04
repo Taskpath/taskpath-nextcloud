@@ -7,7 +7,7 @@
     <description><![CDATA[Taskpath gives you a governed intake folder. Documents that land in it (scans, invoices, letters, contracts) are recognised, and Taskpath proposes a name and a folder following the conventions your archive already uses. You approve each proposal in the Files sidebar or from a notification; then the document is filed. Once a kind of document has been right many times in a row, you can let Taskpath file that kind by itself.
 
 **What leaves your Nextcloud:** the documents you drop in the intake folder (read, then deleted), and the names of folders and files in the archive folder you choose. Nothing else. Taskpath has no access to your Nextcloud; this app does the filing, as you. Processed in the EU.]]></description>
-    <version>0.7.0</version>
+    <version>0.7.1</version>
     <licence>agpl</licence>
     <author homepage="https://taskpath.eu">Taskpath</author>
     <namespace>Taskpath</namespace>
