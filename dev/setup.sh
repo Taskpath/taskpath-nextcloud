@@ -2,7 +2,9 @@
 # One-time setup of the local Nextcloud for developing the app.
 set -e
 occ() { docker compose exec -T -u www-data nextcloud php occ "$@"; }
-until occ status --output=json 2>/dev/null | grep -q '"installed":true'; do sleep 3; done
+# Wait until it answers over HTTP: the image's entrypoint has finished by then and
+# won't rewrite config.php under the settings below (it did once, dropping one).
+until curl -sf http://localhost:8080/status.php 2>/dev/null | grep -q '"installed":true'; do sleep 3; done
 occ app:enable taskpath
 occ app:disable firstrunwizard
 # Browsers reach Taskpath on localhost; this server reaches it via the host gateway.

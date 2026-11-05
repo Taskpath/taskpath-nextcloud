@@ -69,7 +69,9 @@ class ConnectController extends Controller {
 		}
 		try {
 			$answer = $this->client->exchange($code, $verifier);
-		} catch (TaskpathException) {
+		} catch (\Exception $e) {
+			// Taskpath unreachable, or this server may not connect to it (local address).
+			$this->logger->warning('Taskpath: connecting failed: ' . $e->getMessage(), ['app' => 'taskpath']);
 			return new RedirectResponse($settings . '?taskpath=failed');
 		}
 		$this->connection->saveToken($answer['token'], $answer['workspace']['name'] ?? '', $answer['workspace']['url'] ?? '',
