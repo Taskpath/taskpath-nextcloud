@@ -6,6 +6,7 @@ namespace OCA\Taskpath\Service;
 
 use OCP\Files\File;
 use OCP\Files\IRootFolder;
+use OCP\IUserManager;
 
 /** Sends one document from the intake folder to Taskpath to be read. */
 class Uploader {
@@ -13,6 +14,7 @@ class Uploader {
 		private Connection $connection,
 		private TaskpathClient $client,
 		private IRootFolder $root,
+		private IUserManager $users,
 	) {
 	}
 
@@ -29,8 +31,10 @@ class Uploader {
 		}
 		$stream = $file->fopen('r');
 		try {
+			$uid = $this->connection->dropper($file->getId());
+			$droppedBy = $uid === null ? null : ['id' => $uid, 'name' => $this->users->get($uid)?->getDisplayName() ?: $uid];
 			return $this->client->upload((string)$file->getId(), $file->getEtag(), $home->getRelativePath($file->getPath()),
-				$file->getName(), $stream, $file->getMimetype());
+				$file->getName(), $stream, $file->getMimetype(), $droppedBy);
 		} finally {
 			if (is_resource($stream)) {
 				fclose($stream);

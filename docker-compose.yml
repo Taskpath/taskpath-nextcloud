@@ -3,7 +3,7 @@
 #   docker compose up -d && ./dev/setup.sh
 services:
   nextcloud:
-    image: nextcloud:31-apache
+    image: nextcloud:35-apache
     # Docker creates custom_apps (the mount's parent) as root; hand it back to
     # the web server before the installer checks it's writable.
     entrypoint: ["sh", "-c", "mkdir -p /var/www/html/custom_apps && chown www-data:www-data /var/www/html/custom_apps && exec /entrypoint.sh apache2-foreground"]

@@ -21,6 +21,10 @@ class TaskpathClient {
 		return $this->request('POST', '/api/v1/connect/exchange', ['json' => ['code' => $code, 'code_verifier' => $verifier]], auth: false);
 	}
 
+	public function connection(): array {
+		return $this->request('GET', '/api/v1/connection', timeout: 5);
+	}
+
 	public function updateConnection(array $settings): array {
 		return $this->request('PATCH', '/api/v1/connection', ['json' => $settings]);
 	}
@@ -34,13 +38,18 @@ class TaskpathClient {
 	}
 
 	/** @param resource|string $content */
-	public function upload(string $fileId, string $etag, string $path, string $name, $content, string $mime): array {
-		return $this->request('POST', '/api/v1/filings', ['multipart' => [
+	public function upload(string $fileId, string $etag, string $path, string $name, $content, string $mime, ?array $droppedBy = null): array {
+		$parts = [
 			['name' => 'file_id', 'contents' => $fileId],
 			['name' => 'etag', 'contents' => $etag],
 			['name' => 'path', 'contents' => $path],
 			['name' => 'file', 'contents' => $content, 'filename' => $name, 'headers' => ['Content-Type' => $mime]],
-		]], timeout: 60);
+		];
+		if ($droppedBy !== null) {
+			$parts[] = ['name' => 'dropped_by[id]', 'contents' => $droppedBy['id']];
+			$parts[] = ['name' => 'dropped_by[name]', 'contents' => $droppedBy['name']];
+		}
+		return $this->request('POST', '/api/v1/filings', ['multipart' => $parts], timeout: 60);
 	}
 
 	public function filingForFile(string $fileId): ?array {
@@ -110,8 +119,8 @@ class TaskpathClient {
 		}
 	}
 
-	public function reportResult(int $actionId, bool $ok, string $pathOrError): array {
-		$body = $ok ? ['ok' => true, 'path' => $pathOrError] : ['ok' => false, 'error' => $pathOrError];
+	public function reportResult(int $actionId, bool $ok, string $pathOrError, ?array $movedAs = null): array {
+		$body = $ok ? ['ok' => true, 'path' => $pathOrError, 'moved_as' => $movedAs] : ['ok' => false, 'error' => $pathOrError];
 		return $this->request('POST', '/api/v1/actions/' . $actionId . '/result', ['json' => $body]);
 	}
 
@@ -136,6 +145,12 @@ class TaskpathClient {
 		};
 		$status = $response->getStatusCode();
 		$body = (string)$response->getBody();
+		if ($status === 401 && $auth) {
+			// Disconnected (or replaced) on Taskpath's side: the token is gone for good,
+			// so the page offers to connect again instead of failing on every call.
+			$this->connection->forget();
+			throw new TaskpathException('Disconnected from Taskpath; connect again', 401);
+		}
 		if ($status >= 400) {
 			$error = json_decode($body, true)['error'] ?? 'Taskpath answered ' . $status;
 			throw new TaskpathException($error, $status);

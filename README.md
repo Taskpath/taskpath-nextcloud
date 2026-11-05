@@ -34,3 +34,14 @@ Browsers cache app scripts per app version: bump `<version>` in
 ## Licence
 
 AGPL-3.0-or-later (see COPYING).
+
+## Frontend
+
+The Taskpath page is a Vue 3 app using Nextcloud's components (`@nextcloud/vue` 9),
+built with Vite into `taskpath/js/` (not committed):
+
+```sh
+cd taskpath && npm ci && npm run build     # or: npm run watch
+```
+
+Bump `<version>` in `appinfo/info.xml` and run `occ upgrade` so browsers load the new build.

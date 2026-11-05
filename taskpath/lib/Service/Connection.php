@@ -68,9 +68,29 @@ class Connection {
 
 	public function forget(): void {
 		foreach (['token', 'workspace', 'workspace_url', 'owner', 'archive_id', 'intake_id', 'archive_path',
-			'intake_path', 'pkce_verifier', 'pkce_state', 'notified'] as $key) {
+			'intake_path', 'pkce_verifier', 'pkce_state', 'notified', 'droppers'] as $key) {
 			$this->config->deleteKey(Application::APP_ID, $key);
 		}
+	}
+
+	/** The workspace may be renamed in Taskpath; keep the copy shown here current. */
+	public function rememberWorkspaceName(string $name): void {
+		if ($name !== '' && $name !== $this->workspace()) {
+			$this->config->setValueString(Application::APP_ID, 'workspace', $name);
+		}
+	}
+
+	/**
+	 * A Taskpath page for the browser. Taskpath builds its links from the address the
+	 * server reached it on, which can differ from the one people use (as in Docker).
+	 */
+	public function browserLink(?string $taskpathUrl): ?string {
+		$path = $taskpathUrl ? parse_url($taskpathUrl, PHP_URL_PATH) : null;
+		if (!is_string($path) || !str_starts_with($path, '/')) {
+			return null;
+		}
+		$query = parse_url((string)$taskpathUrl, PHP_URL_QUERY);
+		return $this->url() . $path . ($query ? '?' . $query : '');
 	}
 
 	public function owner(): ?string {
@@ -121,6 +141,25 @@ class Connection {
 			return null;
 		}
 		return $verifier;
+	}
+
+	/**
+	 * Who put a document in the intake folder (0020 §6), noted when it arrives,
+	 * read when it's sent to Taskpath (which may happen in another request).
+	 */
+	public function rememberDropper(int $fileId, string $uid): void {
+		$droppers = $this->droppers();
+		unset($droppers[(string)$fileId]);
+		$droppers[(string)$fileId] = $uid;
+		$this->config->setValueString(Application::APP_ID, 'droppers', json_encode(array_slice($droppers, -500, null, true)));
+	}
+
+	public function dropper(int $fileId): ?string {
+		return $this->droppers()[(string)$fileId] ?? null;
+	}
+
+	private function droppers(): array {
+		return json_decode($this->config->getValueString(Application::APP_ID, 'droppers', '{}'), true) ?: [];
 	}
 
 	/** Filing ids we've already notified about, so each proposal notifies once. */

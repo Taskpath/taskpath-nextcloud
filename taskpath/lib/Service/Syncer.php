@@ -81,31 +81,48 @@ class Syncer {
 		$this->notifications->markProcessed($notification);
 	}
 
-	private function fileApprovedElsewhere(): void {
+	/**
+	 * Files what was approved outside this page (earned autonomy, or in
+	 * Taskpath). The background job does this once a minute; the page calls it
+	 * on every refresh so automatic filing shows up within seconds.
+	 */
+	public function fileApprovedElsewhere(): void {
 		$actions = $this->client->approvedActions();
 		if ($actions === []) {
 			return;
 		}
-		// Background jobs run without a user; move files as the folder's owner,
-		// so Nextcloud attributes the move to them, not to "an external account".
+		// Approved by earned autonomy or in Taskpath, not by someone here: the move
+		// runs as the archive's owner, with their access (0020 §3). That's also who
+		// Nextcloud names as having moved it, whether this runs in a background job
+		// or during someone else's page refresh; their session comes back after.
 		$owner = $this->users->get((string)$this->connection->owner());
-		if ($owner !== null && $this->session->getUser() === null) {
+		$previous = $this->session->getUser();
+		if ($owner !== null) {
 			$this->session->setVolatileActiveUser($owner);
 		}
-		foreach ($actions as $action) {
-			$claimed = $this->client->claim((int)$action['id']);
-			if ($claimed === null) {
-				continue;
+		try {
+			foreach ($actions as $action) {
+				$claimed = $this->client->claim((int)$action['id']);
+				if ($claimed === null) {
+					continue;
+				}
+				$this->execute($claimed, !empty($claimed['by_itself']) ? '' : (string)($claimed['approved_by'] ?? ''),
+					(string)$this->connection->owner());
 			}
-			$this->execute($claimed, !empty($claimed['by_itself']) ? '' : (string)($claimed['approved_by'] ?? ''));
+		} finally {
+			if ($owner !== null) {
+				$this->session->setVolatileActiveUser($previous);
+			}
 		}
 	}
 
 	/** Moves the file for a claimed action and reports how it went. */
-	public function execute(array $action, string $person = ''): array {
+	public function execute(array $action, string $person, string $decider): array {
 		try {
-			$path = $this->filer->file($action, $person);
-			return $this->client->reportResult((int)$action['id'], true, $path) + ['path' => $path];
+			$path = $this->filer->file($action, $person, $decider);
+			$mover = $this->users->get($decider);
+			$movedAs = ['id' => $decider, 'name' => $mover?->getDisplayName() ?: $decider];
+			return $this->client->reportResult((int)$action['id'], true, $path, $movedAs) + ['path' => $path];
 		} catch (TaskpathException $e) {
 			throw $e;
 		} catch (\Exception $e) {
