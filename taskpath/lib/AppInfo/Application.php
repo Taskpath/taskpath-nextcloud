@@ -27,6 +27,10 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(NodeCreatedEvent::class, FileArrivedListener::class);
 		$context->registerEventListener(NodeRenamedEvent::class, FileArrivedListener::class);
 		$context->registerEventListener(LoadSidebar::class, LoadSidebarListener::class);
+		// SPIKE (mailbox probe): hear new mail from the Mail app, by class name so
+		// the app still loads without Mail installed.
+		$context->registerEventListener('OCA\\Mail\\Events\\NewMessagesSynchronized', \OCA\Taskpath\Listener\MailProbeListener::class);
+		$context->registerEventListener('OCA\\Mail\\Events\\NewMessageReceivedEvent', \OCA\Taskpath\Listener\MailProbeListener::class);
 		$context->registerNotifierService(Notifier::class);
 	}
 
