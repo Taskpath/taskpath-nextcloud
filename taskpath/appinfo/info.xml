@@ -3,10 +3,16 @@
       xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
     <id>taskpath</id>
     <name>Taskpath</name>
-    <summary>Drop a document in one folder; Taskpath suggests where it belongs, you approve.</summary>
-    <description><![CDATA[Taskpath gives you a governed intake folder. Documents that land in it (scans, invoices, letters, contracts) are recognised, and Taskpath proposes a name and a folder following the conventions your archive already uses. You approve each proposal in the Files sidebar or from a notification; then the document is filed. Once a kind of document has been right many times in a row, you can let Taskpath file that kind by itself.
+    <summary>A shared folder for incoming documents: Taskpath proposes where each one belongs, a person approves.</summary>
+    <description><![CDATA[Scans, invoices, letters and contracts land in one shared folder and stay there, because filing them by the house rules is nobody's job. Taskpath recognises each document and proposes a name and a folder following the conventions your archive already uses, learned from the names of what is already filed. Someone approves it on the Taskpath page, and the app files it.
 
-**What leaves your Nextcloud:** the documents you drop in the intake folder (read, then deleted), and the names of folders and files in the archive folder you choose. Nothing else. Taskpath has no access to your Nextcloud; this app does the filing, as you. Processed in the EU.]]></description>
+- **Shared, with Nextcloud's own permissions.** The intake folder is shared with the same people as the archive. Everyone sees only the documents they can open in Files, and can approve only where they could put the document themselves. The move is made as that person.
+- **Autonomy is earned, per kind of document.** After a run of approvals nobody changed, the archive's owner can let Taskpath file that kind by itself. It still checks each document and asks when anything is unusual; one undo turns it off.
+- **Everything is on record.** Who dropped a document, who approved it, and why it was filed by itself, with the checks that passed.
+
+**What leaves your Nextcloud:** the documents put in the intake folder (read, then deleted by Taskpath) and the names of folders and files in the archive you choose. Nothing else. Taskpath has no access to your Nextcloud; this app does the filing. Processed in the EU.
+
+Requires a Taskpath workspace: connecting creates one in two steps.]]></description>
     <version>0.7.1</version>
     <licence>agpl</licence>
     <author homepage="https://taskpath.eu">Taskpath</author>
@@ -18,6 +24,14 @@
     <dependencies>
         <nextcloud min-version="33" max-version="35"/>
     </dependencies>
+    <background-jobs>
+        <job>OCA\Taskpath\BackgroundJob\Sync</job>
+        <job>OCA\Taskpath\BackgroundJob\Snapshot</job>
+    </background-jobs>
+    <settings>
+        <admin>OCA\Taskpath\Settings\Admin</admin>
+        <admin-section>OCA\Taskpath\Settings\Section</admin-section>
+    </settings>
     <navigations>
         <navigation>
             <name>Taskpath</name>
@@ -25,20 +39,4 @@
             <icon>app.svg</icon>
         </navigation>
     </navigations>
-    <background-jobs>
-        <job>OCA\Taskpath\BackgroundJob\Sync</job>
-        <job>OCA\Taskpath\BackgroundJob\Snapshot</job>
-    </background-jobs>
-    <activity>
-        <settings>
-            <setting>OCA\Taskpath\Activity\Setting</setting>
-        </settings>
-        <providers>
-            <provider>OCA\Taskpath\Activity\Provider</provider>
-        </providers>
-    </activity>
-    <settings>
-        <admin>OCA\Taskpath\Settings\Admin</admin>
-        <admin-section>OCA\Taskpath\Settings\Section</admin-section>
-    </settings>
 </info>
