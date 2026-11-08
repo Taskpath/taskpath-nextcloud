@@ -11,10 +11,15 @@ use Psr\Log\LoggerInterface;
 
 /** Sends one document from the intake folder to Taskpath to be read. */
 class UploadFile extends QueuedJob {
-	public function __construct(ITimeFactory $time, private Uploader $uploader, private LoggerInterface $logger) {
+	public function __construct(
+		ITimeFactory $time,
+		private Uploader $uploader,
+		private LoggerInterface $logger,
+	) {
 		parent::__construct($time);
 	}
 
+	#[\Override]
 	protected function run($argument): void {
 		try {
 			$this->uploader->upload((int)$argument['file_id']);

@@ -13,9 +13,13 @@ use OCP\L10N\IFactory;
 
 /** "Filed Invoice.pdf in Administratie/Inkoop/2026 (approved by Anna)". */
 class Provider implements IProvider {
-	public function __construct(private IFactory $l10n, private IURLGenerator $urls) {
+	public function __construct(
+		private IFactory $l10n,
+		private IURLGenerator $urls,
+	) {
 	}
 
+	#[\Override]
 	public function parse($language, IEvent $event, ?IEvent $previousEvent = null): IEvent {
 		if ($event->getApp() !== Application::APP_ID) {
 			throw new UnknownActivityException();

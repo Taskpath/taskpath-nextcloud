@@ -7,3 +7,6 @@ taskpath/js/*.mjs
 taskpath/js/*.mjs.map
 taskpath/js/*.mjs.license
 taskpath/css/*-main*.css
+taskpath/vendor/
+taskpath/.php-cs-fixer.cache
+taskpath/.phpunit.cache/

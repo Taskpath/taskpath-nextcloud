@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace OCA\Taskpath\Service;
 
+use OCP\Activity\IManager as Activity;
 use OCP\Files\File;
 use OCP\Files\Folder;
-use OCP\Activity\IManager as Activity;
 
 /**
  * Carries out an approved filing inside this Nextcloud, as the person who
@@ -70,7 +70,7 @@ class Filer {
 		$current = $this->access->ownerPath($fileId);
 		$file = $this->access->movableFor($decider, $fileId);
 		$intake = $this->access->intakeFor($decider);
-		if ($file === null || $current === null || !str_starts_with($current, rtrim((string)$archivePath, '/') . '/')) {
+		if ($file === null || $current === null || !str_starts_with($current, rtrim($archivePath, '/') . '/')) {
 			throw new \RuntimeException('The document is no longer where Taskpath filed it');
 		}
 		if ($intake === null || !$intake->isCreatable()) {
@@ -79,7 +79,7 @@ class Filer {
 		self::$returning[$fileId] = true;
 		$moved = $file->move($intake->getPath() . '/' . $this->freeName($intake, $this->cleanName($originalName)));
 		$path = $this->access->ownerPath($moved->getId()) ?? $moved->getName();
-		$this->publish('undone', $moved->getId(), $moved->getName(), $path, (string)$this->connection->intakePath(), $person);
+		$this->publish('undone', $moved->getId(), $moved->getName(), $path, $this->connection->intakePath(), $person);
 		return $path;
 	}
 

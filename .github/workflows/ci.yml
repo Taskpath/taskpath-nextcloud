@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  php:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # The lowest and highest PHP that Nextcloud 33-35 run on.
+        php: ['8.2', '8.4']
+    defaults:
+      run:
+        working-directory: taskpath
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+      - run: composer install --no-interaction --no-progress
+      - name: Code style
+        if: matrix.php == '8.2'
+        run: composer cs:check
+      - name: Static analysis
+        run: composer psalm
+      - name: Unit tests
+        run: composer test
+
+  frontend:
+    name: Page build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: taskpath
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: taskpath/package-lock.json
+      - run: npm ci
+      - run: npm run build

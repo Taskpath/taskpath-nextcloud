@@ -1,0 +1,40 @@
+{
+	"name": "stiller/taskpath",
+	"description": "Taskpath for Nextcloud: governed intake folders",
+	"type": "project",
+	"license": "AGPL-3.0-or-later",
+	"require": {
+		"php": "^8.2"
+	},
+	"require-dev": {
+		"nextcloud/ocp": "dev-stable33",
+		"nextcloud/coding-standard": "^1.5",
+		"phpunit/phpunit": "^11.5",
+		"vimeo/psalm": "^6.13"
+	},
+	"autoload": {
+		"psr-4": {
+			"OCA\\Taskpath\\": "lib/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"OCA\\Taskpath\\Tests\\": "tests/",
+			"OCP\\": "vendor/nextcloud/ocp/OCP",
+			"NCU\\": "vendor/nextcloud/ocp/NCU"
+		}
+	},
+	"scripts": {
+		"cs:check": "php-cs-fixer fix --dry-run --diff",
+		"cs:fix": "php-cs-fixer fix",
+		"psalm": "psalm --no-cache --threads=1",
+		"test": "phpunit"
+	},
+	"config": {
+		"optimize-autoloader": true,
+		"sort-packages": true,
+		"platform": {
+			"php": "8.2.27"
+		}
+	}
+}

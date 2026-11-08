@@ -6,13 +6,13 @@ namespace OCA\Taskpath\Listener;
 
 use OCA\Taskpath\BackgroundJob\UploadFile;
 use OCA\Taskpath\Service\Connection;
+use OCA\Taskpath\Service\Filer;
 use OCP\BackgroundJob\IJobList;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\Files\Events\Node\NodeCreatedEvent;
 use OCP\Files\Events\Node\NodeRenamedEvent;
 use OCP\Files\File;
-use OCA\Taskpath\Service\Filer;
 use OCP\IUserSession;
 
 /**
@@ -33,6 +33,7 @@ class FileArrivedListener implements IEventListener {
 	) {
 	}
 
+	#[\Override]
 	public function handle(Event $event): void {
 		$node = match (true) {
 			$event instanceof NodeCreatedEvent => $event->getNode(),
