@@ -178,6 +178,8 @@ OC.L10N.register(
  "The intake folder isn't shared with you": "De map om te archiveren is niet met je gedeeld",
  "You can see this intake folder but not add to it": "Je kunt deze map zien, maar er niets aan toevoegen",
  "arrived as {name}, from {person}": "binnengekomen als {name}, van {person}",
- "from {person}": "van {person}"
+ "from {person}": "van {person}",
+ "original name": "oorspronkelijke naam",
+ "Documents named like this one are filed in more than one place. Check where this one goes.": "Documenten met een naam zoals deze staan op meer dan één plek. Kijk waar deze heen moet."
 },
 "nplurals=2; plural=(n != 1);");

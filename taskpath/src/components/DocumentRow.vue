@@ -66,6 +66,7 @@ const REASONS = {
 	party_unsure: () => t('taskpath', 'The name was matched to a similar name Taskpath already knows. Check it.'),
 	party_unknown: () => t('taskpath', 'This name doesn\'t appear in the archive yet for this kind of document. Check that it\'s right.'),
 	already_there: () => t('taskpath', 'A document with this name is already in that folder. It may be a duplicate.'),
+	similar_elsewhere: () => t('taskpath', 'Documents named like this one are filed in more than one place. Check where this one goes.'),
 }
 const LABELS = { party: () => t('taskpath', 'From'), date: () => t('taskpath', 'Date'), period: () => t('taskpath', 'Period'), reference: () => t('taskpath', 'Reference') }
 
