@@ -31,6 +31,7 @@ class LearnedRules {
 		$words = [
 			'party' => $this->l->t('party'), 'year' => $this->l->t('year'), 'month' => $this->l->t('month'),
 			'yyyy-mm' => $this->l->t('year-month'), 'date' => $this->l->t('date'), 'reference' => $this->l->t('number'),
+			'original' => $this->l->t('original name'),
 		];
 		$readable = function (string $pattern, string $label) use ($words): string {
 			return preg_replace_callback('/\{([^}]+)\}/', fn ($m) => $m[1] === 'label' ? $label : '{' . ($words[$m[1]] ?? $m[1]) . '}', $pattern) ?? $pattern;
