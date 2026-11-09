@@ -11,12 +11,16 @@ use OCP\BackgroundJob\TimedJob;
 
 /** Every few minutes: notify about new proposals, file what was approved in Taskpath. */
 class Sync extends TimedJob {
-	public function __construct(ITimeFactory $time, private Syncer $syncer) {
+	public function __construct(
+		ITimeFactory $time,
+		private Syncer $syncer,
+	) {
 		parent::__construct($time);
 		$this->setInterval(60);
 		$this->setTimeSensitivity(IJob::TIME_SENSITIVE);
 	}
 
+	#[\Override]
 	protected function run($argument): void {
 		$this->syncer->run();
 	}

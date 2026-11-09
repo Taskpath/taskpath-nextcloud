@@ -9,10 +9,10 @@ use OCA\Taskpath\Service\Access;
 use OCA\Taskpath\Service\AccessDenied;
 use OCA\Taskpath\Service\Connection;
 use OCA\Taskpath\Service\Filer;
-use OCA\Taskpath\Service\Uploader;
 use OCA\Taskpath\Service\Syncer;
 use OCA\Taskpath\Service\TaskpathClient;
 use OCA\Taskpath\Service\TaskpathException;
+use OCA\Taskpath\Service\Uploader;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
@@ -164,4 +164,3 @@ class FilingController extends Controller {
 		}
 	}
 }
-

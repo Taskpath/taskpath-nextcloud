@@ -12,11 +12,15 @@ use OCP\IL10N;
  * which rules are defaults or follow another kind's rule.
  */
 class LearnedRules {
-	public function __construct(private TaskpathClient $client, private IL10N $l) {
+	public function __construct(
+		private TaskpathClient $client,
+		private IL10N $l,
+	) {
 	}
 
 	public function view(): array {
 		try {
+			/** @var array{source?: string, rules?: array<array-key, array<string, mixed>>} $profile */
 			$profile = $this->client->profile();
 		} catch (\Exception) {
 			return [];
@@ -29,7 +33,7 @@ class LearnedRules {
 			'yyyy-mm' => $this->l->t('year-month'), 'date' => $this->l->t('date'), 'reference' => $this->l->t('number'),
 		];
 		$readable = function (string $pattern, string $label) use ($words): string {
-			return preg_replace_callback('/\{([^}]+)\}/', fn ($m) => $m[1] === 'label' ? $label : '{' . ($words[$m[1]] ?? $m[1]) . '}', $pattern);
+			return preg_replace_callback('/\{([^}]+)\}/', fn ($m) => $m[1] === 'label' ? $label : '{' . ($words[$m[1]] ?? $m[1]) . '}', $pattern) ?? $pattern;
 		};
 		$rules = array_map(fn ($rule) => [
 			'label' => $rule['label'],

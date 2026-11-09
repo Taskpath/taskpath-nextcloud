@@ -26,6 +26,7 @@ class Admin implements ISettings {
 	) {
 	}
 
+	#[\Override]
 	public function getForm(): TemplateResponse {
 		Util::addStyle(Application::APP_ID, 'taskpath');
 		Util::addTranslations(Application::APP_ID);
@@ -63,10 +64,12 @@ class Admin implements ISettings {
 		return $this->connection->isReady() ? $this->rules->view() : [];
 	}
 
+	#[\Override]
 	public function getSection(): string {
 		return 'taskpath';
 	}
 
+	#[\Override]
 	public function getPriority(): int {
 		return 10;
 	}

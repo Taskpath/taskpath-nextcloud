@@ -25,6 +25,7 @@ class LoadSidebarListener implements IEventListener {
 	) {
 	}
 
+	#[\Override]
 	public function handle(Event $event): void {
 		if (!$this->connection->isReady() || $this->session->getUser()?->getUID() !== $this->connection->owner()) {
 			return;

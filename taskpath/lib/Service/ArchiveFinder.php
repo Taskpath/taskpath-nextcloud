@@ -33,12 +33,15 @@ class ArchiveFinder {
 		if ($best === null) {
 			return null;
 		}
-		unset($best['score']);
-		$best['examples'] = $this->varied($best['examples']);
-		return $best;
+		return ['path' => $best['path'], 'files' => $best['files'], 'folders' => $best['folders'],
+			'years' => $best['years'], 'examples' => $this->varied($best['examples'])];
 	}
 
 	/** Three examples from different parts of the archive, not three receipts. */
+	/**
+	 * @param string[] $examples
+	 * @return string[]
+	 */
 	private function varied(array $examples): array {
 		$picked = [];
 		$seen = [];
@@ -52,6 +55,7 @@ class ArchiveFinder {
 		return array_slice(array_merge($picked, array_diff($examples, $picked)), 0, 3);
 	}
 
+	/** @param array{files: int, folders: int, years: int, examples: string[]} $stats */
 	private function walk(Folder $folder, string $path, int $depth, array &$stats, ?int $skipId): void {
 		if ($depth >= self::MAX_DEPTH || $stats['files'] >= self::MAX_FILES) {
 			return;
