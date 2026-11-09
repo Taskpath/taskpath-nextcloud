@@ -1,5 +1,5 @@
 {
-	"name": "stiller/taskpath",
+	"name": "taskpath/taskpath-nextcloud",
 	"description": "Taskpath for Nextcloud: governed intake folders",
 	"type": "project",
 	"license": "AGPL-3.0-or-later",
