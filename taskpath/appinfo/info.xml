@@ -20,7 +20,12 @@ Requires a Taskpath workspace: connecting creates one in two steps.]]></descript
     <category>files</category>
     <category>workflow</category>
     <website>https://taskpath.eu</website>
-    <bugs>https://taskpath.eu/docs</bugs>
+    <bugs>https://github.com/taskpath/taskpath-nextcloud/issues</bugs>
+    <repository type="git">https://github.com/taskpath/taskpath-nextcloud</repository>
+    <screenshot>https://raw.githubusercontent.com/taskpath/taskpath-nextcloud/main/screenshots/1-to-file.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/taskpath/taskpath-nextcloud/main/screenshots/2-colleague.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/taskpath/taskpath-nextcloud/main/screenshots/3-learned.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/taskpath/taskpath-nextcloud/main/screenshots/4-connect.png</screenshot>
     <dependencies>
         <nextcloud min-version="33" max-version="35"/>
     </dependencies>
