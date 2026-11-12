@@ -12,8 +12,8 @@
 
 **What leaves your Nextcloud:** the documents put in the intake folder (read, then deleted by Taskpath) and the names of folders and files in the archive you choose. Nothing else. Taskpath has no access to your Nextcloud; this app does the filing. Processed in the EU.
 
-Requires a Taskpath workspace: connecting creates one in two steps.]]></description>
-    <version>0.7.1</version>
+Requires a Taskpath workspace: connecting creates one in two steps. Free to start, no card needed.]]></description>
+    <version>0.7.2</version>
     <licence>agpl</licence>
     <author homepage="https://taskpath.eu">Taskpath</author>
     <namespace>Taskpath</namespace>

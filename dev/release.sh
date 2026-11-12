@@ -23,7 +23,7 @@ for part in appinfo css img js l10n lib templates; do
   cp -R "taskpath/$part" "$STAGE/taskpath/"
 done
 cp COPYING "$STAGE/taskpath/"
-find "$STAGE" -name '.DS_Store' -delete
+find "$STAGE" \( -name '.DS_Store' -o -name '*.map' \) -delete
 
 if [ -f "$CERT_DIR/taskpath.crt" ] && [ -f "$CERT_DIR/taskpath.key" ]; then
   echo "Signing the code (appinfo/signature.json)"
