@@ -40,7 +40,17 @@ else
   echo "No signed certificate in $CERT_DIR yet: building unsigned (fine for a manual install)"
 fi
 
-tar -czf "$OUT" -C "$STAGE" taskpath
+# macOS tar otherwise adds AppleDouble "._" entries for extended attributes, which
+# Nextcloud sees as a second top-level folder and refuses to install.
+xattr -cr "$STAGE" 2>/dev/null || true
+COPYFILE_DISABLE=1 tar --no-xattrs --no-mac-metadata -czf "$OUT" -C "$STAGE" taskpath
+python3 -I - "$OUT" <<'PY'
+import sys, tarfile
+names = tarfile.open(sys.argv[1]).getnames()
+bad = [n for n in names if n != "taskpath" and not n.startswith("taskpath/") or "/._" in n or n.startswith("._")]
+if bad:
+    sys.exit(f"Release tarball must hold only taskpath/, found: {bad[:5]}")
+PY
 echo "Release: $OUT ($(du -h "$OUT" | cut -f1))"
 
 if [ -f "$CERT_DIR/taskpath.crt" ] && [ -f "$CERT_DIR/taskpath.key" ]; then
