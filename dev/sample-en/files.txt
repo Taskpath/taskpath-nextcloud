@@ -1,0 +1,149 @@
+Accounts/Purchases/2025/Corrib Plumbing Supplies/2025-04-11 Corrib Plumbing Supplies invoice 2025001.pdf
+Accounts/Purchases/2025/Corrib Plumbing Supplies/2025-07-12 Corrib Plumbing Supplies invoice 2025002.pdf
+Accounts/Purchases/2025/Corrib Plumbing Supplies/2025-10-13 Corrib Plumbing Supplies invoice 2025003.pdf
+Accounts/Purchases/2025/Corrib Plumbing Supplies/2025-01-14 Corrib Plumbing Supplies invoice 2025004.pdf
+Accounts/Purchases/2025/Shannon Copper/2025-05-11 Shannon Copper invoice 2025041.pdf
+Accounts/Purchases/2025/Shannon Copper/2025-08-12 Shannon Copper invoice 2025042.pdf
+Accounts/Purchases/2025/Shannon Copper/2025-11-13 Shannon Copper invoice 2025043.pdf
+Accounts/Purchases/2025/Shannon Copper/2025-02-14 Shannon Copper invoice 2025044.pdf
+Accounts/Purchases/2025/Atlantic Pipe and Tube/2025-06-11 Atlantic Pipe and Tube invoice 2025081.pdf
+Accounts/Purchases/2025/Atlantic Pipe and Tube/2025-09-12 Atlantic Pipe and Tube invoice 2025082.pdf
+Accounts/Purchases/2025/Atlantic Pipe and Tube/2025-12-13 Atlantic Pipe and Tube invoice 2025083.pdf
+Accounts/Purchases/2025/Atlantic Pipe and Tube/2025-03-14 Atlantic Pipe and Tube invoice 2025084.pdf
+Accounts/Purchases/2025/Western Electrical/2025-07-11 Western Electrical invoice 2025121.pdf
+Accounts/Purchases/2025/Western Electrical/2025-10-12 Western Electrical invoice 2025122.pdf
+Accounts/Purchases/2025/Western Electrical/2025-01-13 Western Electrical invoice 2025123.pdf
+Accounts/Purchases/2025/Western Electrical/2025-04-14 Western Electrical invoice 2025124.pdf
+Accounts/Purchases/2025/Galway Builders Providers/2025-08-11 Galway Builders Providers invoice 2025161.pdf
+Accounts/Purchases/2025/Galway Builders Providers/2025-11-12 Galway Builders Providers invoice 2025162.pdf
+Accounts/Purchases/2025/Galway Builders Providers/2025-02-13 Galway Builders Providers invoice 2025163.pdf
+Accounts/Purchases/2025/Galway Builders Providers/2025-05-14 Galway Builders Providers invoice 2025164.pdf
+Accounts/Purchases/2025/Northside Gas Services/2025-09-11 Northside Gas Services invoice 2025201.pdf
+Accounts/Purchases/2025/Northside Gas Services/2025-12-12 Northside Gas Services invoice 2025202.pdf
+Accounts/Purchases/2025/Northside Gas Services/2025-03-13 Northside Gas Services invoice 2025203.pdf
+Accounts/Purchases/2025/Northside Gas Services/2025-06-14 Northside Gas Services invoice 2025204.pdf
+Bank/2025/2025-01 Bank statement.pdf
+Staff/Payslips/2025/2025-01 Payslip Sean Murphy.pdf
+Staff/Payslips/2025/2025-01 Payslip Aoife Walsh.pdf
+Staff/Payslips/2025/2025-01 Payslip Daniel Okafor.pdf
+Bank/2025/2025-02 Bank statement.pdf
+Staff/Payslips/2025/2025-02 Payslip Sean Murphy.pdf
+Staff/Payslips/2025/2025-02 Payslip Aoife Walsh.pdf
+Staff/Payslips/2025/2025-02 Payslip Daniel Okafor.pdf
+Bank/2025/2025-03 Bank statement.pdf
+Staff/Payslips/2025/2025-03 Payslip Sean Murphy.pdf
+Staff/Payslips/2025/2025-03 Payslip Aoife Walsh.pdf
+Staff/Payslips/2025/2025-03 Payslip Daniel Okafor.pdf
+Bank/2025/2025-04 Bank statement.pdf
+Staff/Payslips/2025/2025-04 Payslip Sean Murphy.pdf
+Staff/Payslips/2025/2025-04 Payslip Aoife Walsh.pdf
+Staff/Payslips/2025/2025-04 Payslip Daniel Okafor.pdf
+Bank/2025/2025-05 Bank statement.pdf
+Staff/Payslips/2025/2025-05 Payslip Sean Murphy.pdf
+Staff/Payslips/2025/2025-05 Payslip Aoife Walsh.pdf
+Staff/Payslips/2025/2025-05 Payslip Daniel Okafor.pdf
+Bank/2025/2025-06 Bank statement.pdf
+Staff/Payslips/2025/2025-06 Payslip Sean Murphy.pdf
+Staff/Payslips/2025/2025-06 Payslip Aoife Walsh.pdf
+Staff/Payslips/2025/2025-06 Payslip Daniel Okafor.pdf
+Bank/2025/2025-07 Bank statement.pdf
+Staff/Payslips/2025/2025-07 Payslip Sean Murphy.pdf
+Staff/Payslips/2025/2025-07 Payslip Aoife Walsh.pdf
+Staff/Payslips/2025/2025-07 Payslip Daniel Okafor.pdf
+Bank/2025/2025-08 Bank statement.pdf
+Staff/Payslips/2025/2025-08 Payslip Sean Murphy.pdf
+Staff/Payslips/2025/2025-08 Payslip Aoife Walsh.pdf
+Staff/Payslips/2025/2025-08 Payslip Daniel Okafor.pdf
+Bank/2025/2025-09 Bank statement.pdf
+Staff/Payslips/2025/2025-09 Payslip Sean Murphy.pdf
+Staff/Payslips/2025/2025-09 Payslip Aoife Walsh.pdf
+Staff/Payslips/2025/2025-09 Payslip Daniel Okafor.pdf
+Bank/2025/2025-10 Bank statement.pdf
+Staff/Payslips/2025/2025-10 Payslip Sean Murphy.pdf
+Staff/Payslips/2025/2025-10 Payslip Aoife Walsh.pdf
+Staff/Payslips/2025/2025-10 Payslip Daniel Okafor.pdf
+Bank/2025/2025-11 Bank statement.pdf
+Staff/Payslips/2025/2025-11 Payslip Sean Murphy.pdf
+Staff/Payslips/2025/2025-11 Payslip Aoife Walsh.pdf
+Staff/Payslips/2025/2025-11 Payslip Daniel Okafor.pdf
+Bank/2025/2025-12 Bank statement.pdf
+Staff/Payslips/2025/2025-12 Payslip Sean Murphy.pdf
+Staff/Payslips/2025/2025-12 Payslip Aoife Walsh.pdf
+Staff/Payslips/2025/2025-12 Payslip Daniel Okafor.pdf
+Revenue/2025/2025-02-14 Revenue assessment 2025.pdf
+Revenue/2025/2025-07-30 Revenue VAT return Q2.pdf
+Quotes/2025/2025-03-05 Quote Parkview Apartments.pdf
+Quotes/2025/2025-04-06 Quote Claddagh Housing Association.pdf
+Quotes/2025/2025-05-07 Quote Kelly's Bakery.pdf
+Correspondence/2025/2025-05-12 Galway City Council.pdf
+Correspondence/2025/2025-01-20 Companies Registration Office.pdf
+Correspondence/2025/2025-11-03 Gas Safety Register.pdf
+Accounts/Receipts/2025/2025-03-03 Galway Builders Providers receipt.pdf
+Accounts/Purchases/2026/Corrib Plumbing Supplies/2026-04-11 Corrib Plumbing Supplies invoice 2026001.pdf
+Accounts/Purchases/2026/Corrib Plumbing Supplies/2026-07-12 Corrib Plumbing Supplies invoice 2026002.pdf
+Accounts/Purchases/2026/Corrib Plumbing Supplies/2026-01-14 Corrib Plumbing Supplies invoice 2026004.pdf
+Accounts/Purchases/2026/Shannon Copper/2026-05-11 Shannon Copper invoice 2026041.pdf
+Accounts/Purchases/2026/Shannon Copper/2026-08-12 Shannon Copper invoice 2026042.pdf
+Accounts/Purchases/2026/Shannon Copper/2026-02-14 Shannon Copper invoice 2026044.pdf
+Accounts/Purchases/2026/Atlantic Pipe and Tube/2026-06-11 Atlantic Pipe and Tube invoice 2026081.pdf
+Accounts/Purchases/2026/Atlantic Pipe and Tube/2026-09-12 Atlantic Pipe and Tube invoice 2026082.pdf
+Accounts/Purchases/2026/Atlantic Pipe and Tube/2026-03-14 Atlantic Pipe and Tube invoice 2026084.pdf
+Accounts/Purchases/2026/Western Electrical/2026-07-11 Western Electrical invoice 2026121.pdf
+Accounts/Purchases/2026/Western Electrical/2026-01-13 Western Electrical invoice 2026123.pdf
+Accounts/Purchases/2026/Western Electrical/2026-04-14 Western Electrical invoice 2026124.pdf
+Accounts/Purchases/2026/Galway Builders Providers/2026-08-11 Galway Builders Providers invoice 2026161.pdf
+Accounts/Purchases/2026/Galway Builders Providers/2026-02-13 Galway Builders Providers invoice 2026163.pdf
+Accounts/Purchases/2026/Galway Builders Providers/2026-05-14 Galway Builders Providers invoice 2026164.pdf
+Accounts/Purchases/2026/Northside Gas Services/2026-09-11 Northside Gas Services invoice 2026201.pdf
+Accounts/Purchases/2026/Northside Gas Services/2026-03-13 Northside Gas Services invoice 2026203.pdf
+Accounts/Purchases/2026/Northside Gas Services/2026-06-14 Northside Gas Services invoice 2026204.pdf
+Bank/2026/2026-01 Bank statement.pdf
+Staff/Payslips/2026/2026-01 Payslip Sean Murphy.pdf
+Staff/Payslips/2026/2026-01 Payslip Aoife Walsh.pdf
+Staff/Payslips/2026/2026-01 Payslip Daniel Okafor.pdf
+Bank/2026/2026-02 Bank statement.pdf
+Staff/Payslips/2026/2026-02 Payslip Sean Murphy.pdf
+Staff/Payslips/2026/2026-02 Payslip Aoife Walsh.pdf
+Staff/Payslips/2026/2026-02 Payslip Daniel Okafor.pdf
+Bank/2026/2026-03 Bank statement.pdf
+Staff/Payslips/2026/2026-03 Payslip Sean Murphy.pdf
+Staff/Payslips/2026/2026-03 Payslip Aoife Walsh.pdf
+Staff/Payslips/2026/2026-03 Payslip Daniel Okafor.pdf
+Bank/2026/2026-04 Bank statement.pdf
+Staff/Payslips/2026/2026-04 Payslip Sean Murphy.pdf
+Staff/Payslips/2026/2026-04 Payslip Aoife Walsh.pdf
+Staff/Payslips/2026/2026-04 Payslip Daniel Okafor.pdf
+Bank/2026/2026-05 Bank statement.pdf
+Staff/Payslips/2026/2026-05 Payslip Sean Murphy.pdf
+Staff/Payslips/2026/2026-05 Payslip Aoife Walsh.pdf
+Staff/Payslips/2026/2026-05 Payslip Daniel Okafor.pdf
+Bank/2026/2026-06 Bank statement.pdf
+Staff/Payslips/2026/2026-06 Payslip Sean Murphy.pdf
+Staff/Payslips/2026/2026-06 Payslip Aoife Walsh.pdf
+Staff/Payslips/2026/2026-06 Payslip Daniel Okafor.pdf
+Bank/2026/2026-07 Bank statement.pdf
+Staff/Payslips/2026/2026-07 Payslip Sean Murphy.pdf
+Staff/Payslips/2026/2026-07 Payslip Aoife Walsh.pdf
+Staff/Payslips/2026/2026-07 Payslip Daniel Okafor.pdf
+Bank/2026/2026-08 Bank statement.pdf
+Staff/Payslips/2026/2026-08 Payslip Sean Murphy.pdf
+Staff/Payslips/2026/2026-08 Payslip Aoife Walsh.pdf
+Staff/Payslips/2026/2026-08 Payslip Daniel Okafor.pdf
+Bank/2026/2026-09 Bank statement.pdf
+Staff/Payslips/2026/2026-09 Payslip Sean Murphy.pdf
+Staff/Payslips/2026/2026-09 Payslip Aoife Walsh.pdf
+Staff/Payslips/2026/2026-09 Payslip Daniel Okafor.pdf
+Revenue/2026/2026-02-14 Revenue assessment 2026.pdf
+Revenue/2026/2026-07-30 Revenue VAT return Q2.pdf
+Quotes/2026/2026-03-05 Quote Parkview Apartments.pdf
+Quotes/2026/2026-04-06 Quote Claddagh Housing Association.pdf
+Quotes/2026/2026-05-07 Quote Kelly's Bakery.pdf
+Correspondence/2026/2026-05-12 Galway City Council.pdf
+Correspondence/2026/2026-01-20 Companies Registration Office.pdf
+Correspondence/2026/2026-11-03 Gas Safety Register.pdf
+Accounts/Receipts/2026/2026-03-03 Galway Builders Providers receipt.pdf
+Contracts/Parkview Apartments/Parkview Apartments contract 2025.pdf
+Contracts/Claddagh Housing Association/Claddagh Housing Association contract 2025.pdf
+Contracts/Kelly's Bakery/Kelly's Bakery contract 2025.pdf
+Contracts/Northside Gas Services/Northside Gas Services contract 2024.pdf
+Misc/logo-new-final2.png
