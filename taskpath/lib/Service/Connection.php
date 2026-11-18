@@ -32,6 +32,16 @@ class Connection {
 		return $server !== '' ? rtrim($server, '/') : $this->url();
 	}
 
+	/**
+	 * A code the provider that runs this Nextcloud set for all its instances
+	 * (occ config:app:set taskpath partner_code --value=CODE). Sent along when
+	 * connecting, so the workspace counts for that provider. Disconnecting keeps it.
+	 */
+	public function partnerCode(): string {
+		$code = trim($this->config->getValueString(Application::APP_ID, 'partner_code', ''));
+		return preg_match('/^[A-Za-z0-9-]{4,40}$/', $code) === 1 ? $code : '';
+	}
+
 	public function isConnected(): bool {
 		return $this->token() !== null;
 	}
