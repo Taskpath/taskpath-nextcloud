@@ -15,6 +15,10 @@
 				</p>
 			</div>
 			<div class="stats" aria-live="polite">
+				<span v-if="usage" class="stat" :class="{ 'stat--near': usage.near }">
+					{{ usage.text }}
+					<a v-if="usage.near && usage.url" :href="usage.url" target="_blank" rel="noopener">{{ t('taskpath', 'More documents') }} ↗</a>
+				</span>
 				<span class="stat"><b>{{ waiting }}</b> {{ t('taskpath', 'waiting for you') }}</span>
 				<span class="stat stat--auto"><b>{{ autoToday }}</b> {{ t('taskpath', 'automatic today') }}</span>
 				<span class="stat"><b>{{ filedToday }}</b> {{ t('taskpath', 'filed today') }}</span>
@@ -91,6 +95,7 @@ const props = defineProps({ state: { type: Object, required: true } })
 const documents = ref([])
 const filed = ref([])
 const offers = ref([])
+const allowance = ref(null)
 const loaded = ref(false)
 const dragging = ref(false)
 const fresh = ref(new Set())
@@ -102,6 +107,16 @@ const intakeName = computed(() => (props.state.intake || '').replace(/^\//, ''))
 const ready = computed(() => documents.value.filter((d) => d.filing?.status === 'proposed' && d.filing.action?.state === 'awaiting_approval'
 	&& d.filing.can_decide !== false))
 const waiting = computed(() => documents.value.filter((d) => ['proposed', 'needs_look'].includes(d.filing?.status) && d.filing.action?.state === 'awaiting_approval' && d.filing.can_decide !== false).length)
+// "38 of 50 documents this month": quiet, and prominent from 80% (0024 §7).
+const usage = computed(() => {
+	const a = allowance.value
+	if (!a || a.allowance === null || a.allowance === undefined) return null
+	const vars = { used: a.used, allowance: a.allowance }
+	const text = a.resets_at
+		? t('taskpath', '{used} of {allowance} documents this month', vars)
+		: t('taskpath', '{used} of {allowance} trial documents', vars)
+	return { text, near: a.used >= 0.8 * a.allowance, url: a.upgrade_url }
+})
 const isToday = (iso) => iso && new Date(iso).toDateString() === new Date().toDateString()
 const filedToday = computed(() => filed.value.filter((f) => f.status === 'filed' && isToday(f.filed_at)).length)
 const autoToday = computed(() => filed.value.filter((f) => f.status === 'filed' && f.filed_by_itself && isToday(f.filed_at)).length)
@@ -116,6 +131,7 @@ async function refresh() {
 		documents.value = data.documents
 		filed.value = data.filed
 		offers.value = data.offers
+		allowance.value = data.allowance || null
 		loaded.value = true
 	} catch (error) {
 		showError(error.message)
@@ -212,6 +228,8 @@ code { font-size: .9em; }
 	background: var(--color-background-hover); color: var(--color-text-maxcontrast);
 	b { color: var(--color-main-text); }
 	&--auto b { color: var(--color-primary-element); }
+	&--near { background: var(--color-warning); color: var(--color-warning-text, var(--color-main-text)); }
+	a { color: inherit; text-decoration: underline; margin-inline-start: 4px; }
 }
 .inbox__cols { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 24px; align-items: start; }
 @media (max-width: 900px) { .inbox__cols { grid-template-columns: 1fr; } }

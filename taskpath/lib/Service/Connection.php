@@ -32,6 +32,37 @@ class Connection {
 		return $server !== '' ? rtrim($server, '/') : $this->url();
 	}
 
+	/**
+	 * The workspace's document allowance as Taskpath last reported it:
+	 * { plan, used, allowance (null: no limit), resets_at, upgrade_url }.
+	 */
+	public function allowance(): ?array {
+		$stored = json_decode($this->config->getValueString(Application::APP_ID, 'allowance', ''), true);
+		return is_array($stored) ? $stored : null;
+	}
+
+	public function rememberAllowance(array $allowance): void {
+		$keep = array_intersect_key($allowance, array_flip(['plan', 'used', 'allowance', 'resets_at', 'upgrade_url', 'error']));
+		$this->config->setValueString(Application::APP_ID, 'allowance', (string)json_encode($keep));
+	}
+
+	/**
+	 * Used up, as far as this server knows, and not reset since. New documents then
+	 * wait in the intake folder without being sent; the page asks Taskpath again on
+	 * every refresh, so they flow once the month resets or the plan changes.
+	 */
+	public function allowanceReached(): bool {
+		$a = $this->allowance();
+		if ($a === null || !isset($a['allowance'])) {
+			return false;
+		}
+		$reset = isset($a['resets_at']) ? strtotime((string)$a['resets_at']) : false;
+		if ($reset !== false && $reset <= time()) {
+			return false;
+		}
+		return (int)($a['used'] ?? 0) >= (int)$a['allowance'];
+	}
+
 	public function isConnected(): bool {
 		return $this->token() !== null;
 	}
@@ -68,7 +99,7 @@ class Connection {
 
 	public function forget(): void {
 		foreach (['token', 'workspace', 'workspace_url', 'owner', 'archive_id', 'intake_id', 'archive_path',
-			'intake_path', 'pkce_verifier', 'pkce_state', 'notified', 'droppers'] as $key) {
+			'intake_path', 'pkce_verifier', 'pkce_state', 'notified', 'droppers', 'allowance'] as $key) {
 			$this->config->deleteKey(Application::APP_ID, $key);
 		}
 	}
