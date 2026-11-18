@@ -180,6 +180,13 @@ OC.L10N.register(
  "arrived as {name}, from {person}": "binnengekomen als {name}, van {person}",
  "from {person}": "van {person}",
  "original name": "oorspronkelijke naam",
- "Documents named like this one are filed in more than one place. Check where this one goes.": "Documenten met een naam zoals deze staan op meer dan één plek. Kijk waar deze heen moet."
+ "Documents named like this one are filed in more than one place. Check where this one goes.": "Documenten met een naam zoals deze staan op meer dan één plek. Kijk waar deze heen moet.",
+ "Waiting": "Wacht",
+ "More documents": "Meer documenten",
+ "Taskpath can't read more documents right now. This one stays here and is sent again later.": "Taskpath kan nu geen documenten meer lezen. Dit document blijft hier staan en wordt later opnieuw verstuurd.",
+ "This month's documents are used up. This one stays here and is read from {date}.": "De documenten van deze maand zijn op. Dit document blijft hier staan en wordt vanaf {date} gelezen.",
+ "The trial's documents are used up. This one stays here until there are more.": "De documenten van de proefperiode zijn op. Dit document blijft hier staan tot er meer zijn.",
+ "{used} of {allowance} documents this month": "{used} van {allowance} documenten deze maand",
+ "{used} of {allowance} trial documents": "{used} van {allowance} documenten in de proefperiode"
 },
 "nplurals=2; plural=(n != 1);");
