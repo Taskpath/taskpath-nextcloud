@@ -10,6 +10,12 @@
 			</span>
 		</div>
 
+		<p v-if="status === 'waiting'" class="small waiting">
+			{{ waitingText }}
+			<a v-if="filing.waiting?.upgrade_url && filing.waiting.reason === 'allowance_reached'" :href="filing.waiting.upgrade_url"
+				target="_blank" rel="noopener">{{ t('taskpath', 'More documents') }} ↗</a>
+		</p>
+
 		<ol v-if="!filing || ['pending', 'processing'].includes(status)" class="steps" :aria-label="t('taskpath', 'Progress')">
 			<li class="steps__done">{{ t('taskpath', 'Received') }}</li>
 			<li :class="filing ? 'steps__now' : ''">{{ t('taskpath', 'Reading') }}</li>
@@ -82,12 +88,24 @@ const facts = computed(() => Object.entries(LABELS).filter(([field]) => filing.v
 
 const pill = computed(() => {
 	if (!filing.value) return { kind: 'busy', busy: true, text: t('taskpath', 'Sending…') }
+	if (status.value === 'waiting') return { kind: 'quiet', text: t('taskpath', 'Waiting') }
 	if (['pending', 'processing'].includes(status.value)) return { kind: 'busy', busy: true, text: t('taskpath', 'Reading…') }
 	if (['approved', 'executing'].includes(action.value.state)) return { kind: 'busy', busy: true, text: t('taskpath', 'Filing…') }
 	if (status.value === 'needs_look') return { kind: 'look', text: t('taskpath', 'Needs a look') }
 	if (status.value === 'skipped') return { kind: 'quiet', text: t('taskpath', 'Skipped, stays here') }
 	if (status.value === 'failed') return { kind: 'look', text: t('taskpath', 'Couldn\'t be read') }
 	return { kind: 'ready', text: t('taskpath', 'Proposal ready') }
+})
+
+// Over the allowance a document isn't sent: it waits here, untouched (0024 §4).
+const waitingText = computed(() => {
+	const w = filing.value?.waiting || {}
+	if (w.reason === 'ai_budget_reached') return t('taskpath', 'Taskpath can\'t read more documents right now. This one stays here and is sent again later.')
+	if (w.resets_at) {
+		return t('taskpath', 'This month\'s documents are used up. This one stays here and is read from {date}.',
+			{ date: new Date(w.resets_at).toLocaleDateString(undefined, { day: 'numeric', month: 'long' }) })
+	}
+	return t('taskpath', 'The trial\'s documents are used up. This one stays here until there are more.')
 })
 
 const editing = ref(false)
@@ -131,6 +149,7 @@ function approve() {
 	&__done::before { content: "✓ "; color: var(--color-success); }
 	&__now { color: var(--color-main-text); font-weight: bold; }
 }
+.waiting { color: var(--color-text-maxcontrast); a { text-decoration: underline; margin-inline-start: 4px; } }
 .reasons { margin: 0; padding-left: 18px; color: var(--color-warning-text, var(--color-main-text)); }
 .dest {
 	display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: baseline; padding: 8px 10px;

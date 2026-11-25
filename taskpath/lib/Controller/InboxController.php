@@ -132,9 +132,11 @@ class InboxController extends Controller {
 				if ($filing === null || in_array($filing['status'], ['filed'], true)) {
 					// Not seen yet (or seen before as another version): send it now
 					// rather than waiting for the background job.
-					if ($sent < self::SEND_PER_REFRESH) {
+					if ($sent < self::SEND_PER_REFRESH || $this->connection->allowanceReached()) {
 						$filing = $this->uploader->upload($node->getId());
-						$sent++;
+						if (($filing['status'] ?? '') !== 'waiting') {
+							$sent++;
+						}
 					} else {
 						$filing = null;
 					}
@@ -175,7 +177,8 @@ class InboxController extends Controller {
 					// Offers are a nicety; the inbox works without them.
 				}
 			}
-			return ['documents' => $documents, 'filed' => array_slice($filed, 0, 20), 'offers' => $offers];
+			return ['documents' => $documents, 'filed' => array_slice($filed, 0, 20), 'offers' => $offers,
+				'allowance' => $this->connection->allowance()];
 		});
 	}
 

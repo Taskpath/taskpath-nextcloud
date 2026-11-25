@@ -57,8 +57,13 @@ class TaskpathClient {
 		return $filings[0] ?? null;
 	}
 
+	/** The recent filings; also remembers the workspace's usage that comes with them. */
 	public function recentFilings(): array {
-		return $this->request('GET', '/api/v1/filings')['filings'] ?? [];
+		$answer = $this->request('GET', '/api/v1/filings');
+		if (is_array($answer['allowance'] ?? null)) {
+			$this->connection->rememberAllowance($answer['allowance']);
+		}
+		return $answer['filings'] ?? [];
 	}
 
 	public function filing(int $id): array {
@@ -152,8 +157,9 @@ class TaskpathClient {
 			throw new TaskpathException('Disconnected from Taskpath; connect again', 401);
 		}
 		if ($status >= 400) {
-			$error = json_decode($body, true)['error'] ?? 'Taskpath answered ' . $status;
-			throw new TaskpathException($error, $status);
+			$data = json_decode($body, true);
+			$data = is_array($data) ? $data : [];
+			throw new TaskpathException($data['error'] ?? 'Taskpath answered ' . $status, $status, $data);
 		}
 		return $body === '' ? [] : (json_decode($body, true) ?? []);
 	}
