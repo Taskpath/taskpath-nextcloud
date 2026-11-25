@@ -12,6 +12,17 @@ in the Taskpath repository.
 - **What leaves Nextcloud:** documents dropped in the intake folder (read, then
   deleted by Taskpath) and the names under the chosen archive folder.
 
+## For providers
+
+If you run Nextcloud for your customers and have a Taskpath partner code, set it once
+per instance (or in your provisioning):
+
+    occ config:app:set taskpath partner_code --value=YOUR-CODE
+
+Workspaces connected from that Nextcloud then count for you, without the customer doing
+anything. Disconnecting keeps the code. A customer can also type a code on the connect
+page instead.
+
 ## Develop
 
 Needs Docker and a Taskpath dev server on the host
