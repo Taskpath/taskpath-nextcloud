@@ -49,12 +49,17 @@ class ConnectController extends Controller {
 	/** Returns the Taskpath URL the browser should open. */
 	public function start(): DataResponse {
 		$pairing = $this->connection->startPairing();
-		$query = http_build_query([
+		$params = [
 			'redirect_uri' => $this->urls->linkToRouteAbsolute('taskpath.connect.callback'),
 			'code_challenge' => $pairing['challenge'],
 			'code_challenge_method' => 'S256',
 			'state' => $pairing['state'],
-		]);
+		];
+		$partnerCode = $this->connection->partnerCode();
+		if ($partnerCode !== '') {
+			$params['partner_code'] = $partnerCode;
+		}
+		$query = http_build_query($params);
 		return new DataResponse(['url' => $this->connection->url() . '/connect/nextcloud?' . $query]);
 	}
 
